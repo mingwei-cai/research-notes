@@ -71,18 +71,22 @@ body {
 	display: none;
 }
 
-.menu a {
+.menu a, .menu summary {
 	display: inline-block;
 	padding: 8px 16px;
+	white-space: nowrap;
+	outline: none;
+	cursor: pointer;
+}
+
+.menu a {
 	color: #000;
 	text-decoration: none;
-	white-space: nowrap;
 }
 
 .menu summary {
-	display: inline-block;
-	padding: 8px 16px;
-	outline: none;
+	color: #039;
+	font-style: italic;
 }
 
 .menu summary::-webkit-details-marker {
@@ -90,5 +94,5 @@ body {
 }
 
 .menu a:hover, .menu summary:hover {
-	color: #09F;
+	color: #F30;
 }

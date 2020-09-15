@@ -73,7 +73,7 @@ body {
 
 .menu a {
 	display: inline-block;
-	margin: 8px 16px;
+	padding: 8px 16px;
 	color: #000;
 	text-decoration: none;
 	white-space: nowrap;
@@ -81,6 +81,7 @@ body {
 
 .menu summary {
 	display: block;
+	padding: 8px 16px;
 }
 
 .menu summary::-webkit-details-marker {

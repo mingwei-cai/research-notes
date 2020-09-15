@@ -18,6 +18,12 @@ body {
 	height: 100%;
 }
 
+[name="content"] {
+	flex: 1 0 0;
+	height: 100%;
+	border: none;
+}
+
 .menu {
 	flex: 0 0 300px;
 	height: 100%;
@@ -73,12 +79,14 @@ body {
 	white-space: nowrap;
 }
 
-.menu a:hover {
-	color: #09F;
+.menu summary {
+	display: block;
 }
 
-[name="content"] {
-	flex: 1 0 0;
-	height: 100%;
-	border: none;
+.menu summary::-webkit-details-marker {
+	display: none;
+}
+
+.menu a:hover, .menu summary:hover {
+	color: #09F;
 }

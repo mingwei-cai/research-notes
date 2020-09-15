@@ -19,6 +19,18 @@ body {
 	padding: 8px;
 }
 
+h1, h2 {
+	margin: 40px 0;
+	border-bottom: solid 2px #CCC;
+	color: #666;
+}
+
+h3 {
+	margin: 40px 0 24px 0;
+	border-bottom: solid 2px #CCC;
+	color: #666;
+}
+
 p {
 	text-indent: 2em;
 	line-height: 1.8;

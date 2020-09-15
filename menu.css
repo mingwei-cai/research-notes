@@ -21,12 +21,11 @@ body {
 .menu {
 	flex: 0 0 300px;
 	height: 100%;
-	padding: 8px;
 	background-color: #FED;
 	overflow: auto;
 }
 
-.menu::after {
+.menu::before, .menu::after {
 	content: "";
 	display: block;
 	height: 16px;

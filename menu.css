@@ -23,6 +23,7 @@ body {
 	height: 100%;
 	padding: 8px;
 	background-color: #FED;
+	overflow: auto;
 }
 
 .menu ul {

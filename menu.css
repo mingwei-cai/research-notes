@@ -21,7 +21,7 @@ body {
 .menu {
 	flex: 0 0 300px;
 	height: 100%;
-	padding: 8px;
+	padding: 8px 8px 24px 8px;
 	background-color: #FED;
 	overflow: auto;
 }

@@ -28,10 +28,17 @@ body::before {
 body::after {
 	content: "";
 	display: block;
-	height: 48px;
+	height: 32px;
 }
 
-h1, h2, h3 {
+h1 {
+	margin: 40px 0 24px 0;
+	padding: 8px;
+	border-bottom: solid 2px #CCC;
+	color: #666;
+}
+
+h2, h3 {
 	margin: 40px 0 24px 0;
 	padding: 4px;
 	border-bottom: solid 2px #CCC;

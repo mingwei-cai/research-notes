@@ -80,8 +80,9 @@ body {
 }
 
 .menu summary {
-	display: block;
+	display: inline-block;
 	padding: 8px 16px;
+	outline: none;
 }
 
 .menu summary::-webkit-details-marker {

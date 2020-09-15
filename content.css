@@ -16,17 +16,17 @@ body {
 	max-width: 100%;
 	min-height: 100%;
 	margin: 0 auto;
-	padding: 8px;
+	padding: 0 32px;
 }
 
-h1, h2 {
-	margin: 40px 0;
-	border-bottom: solid 2px #CCC;
-	color: #666;
+body::after {
+	content: "";
+	display: block;
+	height: 48px;
 }
 
-h3 {
-	margin: 40px 0 24px 0;
+h1, h2, h3 {
+	margin: 48px 0 24px 0;
 	border-bottom: solid 2px #CCC;
 	color: #666;
 }

@@ -3,7 +3,6 @@
 let changeContent = function (state) {
 	if (state == null) {
 		state = (location.hash.slice(1) || 'home');
-		history.replaceState(state, '', '#' + state);
 	};
 	/** @type {HTMLIFrameElement} */
 	let content = document.querySelector('[name="content"]');

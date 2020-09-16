@@ -1,9 +1,13 @@
 
 /** @type {(string) => void} */
 let changeContent = function (state) {
+	if (state == null) {
+		state = (location.hash.slice(1) || 'home');
+		history.replaceState(state, '', '#' + state);
+	};
 	/** @type {HTMLIFrameElement} */
 	let content = document.querySelector('[name="content"]');
-	content.src = './' + (state || location.hash.slice(1) || 'home/home') + '.html';
+	content.src = './' + state + '.html';
 };
 
 /** @type {(this: Window, ev: PopStateEvent) => boolean} */
@@ -14,7 +18,7 @@ window.onpopstate = function (ev) {
 
 /** @type {(this: HTMLAnchorElement, ev: MouseEvent) => boolean} */
 let onMenuAnchorClick = function (ev) {
-	let state = this.href.slice(2, -5);
+	let state = this.href.slice((location.origin + location.pathname).length, -5);
 	history.pushState(state, '', '#' + state);
 	return true;
 };

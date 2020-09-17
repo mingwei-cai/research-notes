@@ -152,8 +152,8 @@ let CosDeg = (deg) => (Math.cos(deg * Math.PI / 180));
 	oV20 = oV20.Div(oV20.Length());
 	let oF20A = new Group([
 		new Transform(oV20, (v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		new Transform(oV20, (v) => (new Vector3D(+v.y, +v.z, +v.x))),
-		new Transform(oV20, (v) => (new Vector3D(+v.y, -v.z, +v.x))),
+		new Transform(oV20, (v) => (new Vector3D(+v.z, +v.x, +v.y))),
+		new Transform(oV20, (v) => (new Vector3D(+v.z, -v.x, +v.y))),
 	]);
 	let oF20B = new Group([
 		new Transform(oV20, (v) => (new Vector3D(+v.x, +v.y, +v.z))),

@@ -12,8 +12,7 @@ html {
 }
 
 body {
-	width: 1080px;
-	max-width: 94%;
+	width: 80%;
 	min-height: 100%;
 	margin: 0 auto;
 }
@@ -21,21 +20,15 @@ body {
 body::before, body::after {
 	content: "";
 	display: block;
-	height: 16px;
+	height: 8px;
 }
 
-h1 {
-	margin: 40px 32px 24px 32px;
+h1, h2, h3 {
+	margin: 48px 0 24px 0;
 	padding: 8px;
 	border-bottom: solid 2px #CCC;
 	color: #666;
-}
-
-h2, h3 {
-	margin: 40px 32px 24px 32px;
-	padding: 4px;
-	border-bottom: solid 2px #CCC;
-	color: #666;
+	white-space: nowrap;
 }
 
 h1 {
@@ -43,7 +36,7 @@ h1 {
 }
 
 p {
-	margin: 16px 32px;
+	margin: 24px 0;
 	text-indent: 2em;
 	line-height: 1.8;
 }
@@ -51,7 +44,7 @@ p {
 image, canvas {
 	display: block;
 	margin: 0 auto;
-	max-width: 100%;
+	max-width: 90%;
 	background-color: #FFF;
 	box-shadow: 0 0 4px 3px rgba(0, 0, 0, 0.15);
 }

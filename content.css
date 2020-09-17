@@ -56,6 +56,7 @@ p {
 
 image, canvas {
 	display: block;
-	margin: 16px auto;
+	margin: 0 auto;
+	border: solid 1px #EEE;
 	max-width: 100%;
 }

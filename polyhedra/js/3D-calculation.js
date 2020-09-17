@@ -1,4 +1,4 @@
-let Vector3D = class {
+let Vector = class {
 	x = 0;
 	y = 0;
 	z = 0;
@@ -10,104 +10,115 @@ let Vector3D = class {
 	};
 };
 
-/** @type {(vector: Vector3D) => Vector3D} */
-Vector3D.prototype.Add = function (vector) {
-	return new Vector3D(
-		this.x + vector.x,
-		this.y + vector.y,
-		this.z + vector.z,
+/** @type {(v: Vector) => Vector} */
+Vector.prototype.Add = function (v) {
+	return new Vector(
+		this.x + v.x,
+		this.y + v.y,
+		this.z + v.z,
 	);
 };
 
-/** @type {(vector: Vector3D) => Vector3D} */
-Vector3D.prototype.Sub = function (vector) {
-	return new Vector3D(
-		this.x - vector.x,
-		this.y - vector.y,
-		this.z - vector.z,
+/** @type {(v: Vector) => Vector} */
+Vector.prototype.Sub = function (v) {
+	return new Vector(
+		this.x - v.x,
+		this.y - v.y,
+		this.z - v.z,
 	);
 };
 
-/** @type {(k: number) => Vector3D} */
-Vector3D.prototype.Mul = function (k) {
-	return new Vector3D(
+/** @type {(k: number) => Vector} */
+Vector.prototype.Mul = function (k) {
+	return new Vector(
 		this.x * k,
 		this.y * k,
 		this.z * k,
 	);
 };
 
-/** @type {(k: number) => Vector3D} */
-Vector3D.prototype.Div = function (k) {
-	return new Vector3D(
+/** @type {(k: number) => Vector} */
+Vector.prototype.Div = function (k) {
+	return new Vector(
 		this.x / k,
 		this.y / k,
 		this.z / k,
 	);
 };
 
-/** @type {(vector: Vector3D) => Vector3D} */
-Vector3D.prototype.Cross = function (vector) {
-	return new Vector3D(
-		this.y * vector.z - this.z * vector.y,
-		this.z * vector.x - this.x * vector.z,
-		this.x * vector.y - this.y * vector.x,
+/** @type {(v: Vector) => Vector} */
+Vector.prototype.Cross = function (v) {
+	return new Vector(
+		this.y * v.z - this.z * v.y,
+		this.z * v.x - this.x * v.z,
+		this.x * v.y - this.y * v.x,
 	);
 };
 
-/** @type {(vector: Vector3D) => number} */
-Vector3D.prototype.Dot = function (vector) {
-	return this.x * vector.x + this.y * vector.y + this.z * vector.z;
+/** @type {(v: Vector) => number} */
+Vector.prototype.Dot = function (v) {
+	return this.x * v.x + this.y * v.y + this.z * v.z;
 };
 
-Vector3D.prototype.Length = function () {
+Vector.prototype.Length = function () {
 	return Math.sqrt(this.Dot(this));
 };
 
-let Vertex = class {
-	/** @type {Vector3D} */
-	vector = null;
-	/** @type {(vector: Vector3D) => Vector3D} */
-	Trans = null;
-	/** @type {(vector: Vector3D, Trans: (vector: Vector3D) => Vector3D)} */
-	constructor(vector, Trans) {
-		this.vector = vector;
-		this.Trans = Trans;
+/** @type {(m: WeakMap) => Vector} */
+Vector.prototype.Value = function (m) {
+	return this;
+};
+
+/** @type {(Acrion: (v: Vector) => Vector) => Vector} */
+Vector.prototype.Map = function (Acrion) {
+	return Acrion(this);
+};
+
+/** @type {(base: any, Acrion: (v: Vector) => Vector) => any} */
+let TransformValue = function (base, Acrion) {
+	if (Array.isArray(base)) {
+		return base.map((value) => (TransformValue(value, Acrion)))
+	} else {
+		return base.Map(Acrion);
 	};
 };
 
-Vertex.prototype.AsVector = function () {
-	return this.Trans(this.vector);
-};
-
-let Polygon3D = class {
-	/** @type {Vertex[]} */
-	listVertex = null;
-	/** @type {(listVertex: Vertex[], color: Color)} */
-	constructor(listVertex, color = null) {
-		this.listVertex = listVertex;
-		this.color = color;
+let Transform = class {
+	base = null;
+	/** @type {(v: Vector) => Vector} */
+	Action = null;
+	constructor(base) {
+		this.base = base;
 	};
 };
 
-/** @type {() => Vector3D} */
-Polygon3D.prototype.NormalVector = function () {
-	let vector0 = this.listVertex[0].AsVector();
-	let vector1 = this.listVertex[0].AsVector();
-	let vector2 = this.listVertex[0].AsVector();
-	return vector1.Sub(vector0).Cross(vector2.Sub(vector0));
+/** @type {(m: WeakMap) => any} */
+Transform.prototype.Value = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let value = TransformValue(this.base.Value(m), this.Action);
+	m.set(this, value);
+	return value;
 };
 
-let Face = class {
-	/** @type {Polygon3D} */
-	polygon = null;
-	/** @type {(vector: Vector3D) => Vector3D} */
-	Trans = null;
-	/** @type {(polygon: Polygon3D, Trans: (vector: Vector3D) => Vector3D)} */
-	constructor(polygon, Trans) {
-		this.polygon = polygon;
-		this.Trans = Trans;
+let Group = class {
+	/** @type {Transform[]} */
+	listData = null;
+	/** @type {(listData: Transform[])} */
+	constructor(listData) {
+		this.listData = listData;
 	};
+};
+
+/** @type {(m: WeakMap) => any[]} */
+Group.prototype.Value = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let value = this.listData.map((data) => (data.Value(m)));
+	m.set(this, value);
+	return value;
 };
 
 let Color = class {
@@ -124,20 +135,56 @@ let Color = class {
 	};
 };
 
-let FaceSet = class {
-	/** @type {Face[]} */
-	listFace = null;
-	/** @type {FaceSet[]} */
-	listSubset = null;
-	/** @type {(vector: Vector3D) => Vector3D} */
-	Trans = null;
+/** @type {(light: number) => string} */
+Color.prototype.Value = function (light) {
+	return 'rgba(' + [
+		this.r * light,
+		this.g * light,
+		this.b * light,
+		this.a,
+	] + ')';
+};
+
+let SolidGraph = class {
+	/** @type {Vector[][]} */
+	listPolygon = null;
 	/** @type {Color} */
 	color = null;
-	/** @type {(listFace: Face[], listSubset: FaceSet[], Trans: (vector: Vector3D) => Vector3D, color: Color)} */
-	constructor(listFace, listSubset, Trans, color = null) {
-		this.listFace = listFace;
-		this.listSubset = listSubset;
-		this.Trans = Trans;
+	/** @type {(listPolygon: Vector[][], color: Color)} */
+	constructor(listPolygon, color) {
+		this.listPolygon = listPolygon;
 		this.color = color;
 	};
+};
+
+/** @type {(Acrion: (v: Vector) => Vector) => SolidGraph} */
+SolidGraph.prototype.Map = function (Acrion) {
+	return new SolidGraph(
+		this.listPolygon.map((polygon) => (
+			polygon.map((vector) => (Acrion(vector)))
+		)),
+		this.color,
+	);
+};
+
+let Solid = class {
+	/** @type {Group} */
+	group = null;
+	/** @type {Color} */
+	color = null;
+	/** @type {(group: Group, color: Color)} */
+	constructor(group, color) {
+		this.group = group;
+		this.color = color;
+	};
+};
+
+/** @type {(m: WeakMap) => SolidGraph} */
+Solid.prototype.Value = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let value = new SolidGraph(this.group.Value(m), this.color);
+	m.set(this, value);
+	return value;
 };

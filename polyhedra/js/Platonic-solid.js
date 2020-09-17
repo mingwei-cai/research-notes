@@ -24,7 +24,7 @@ let CosDeg = (deg) => (Math.cos(deg * Math.PI / 180));
 		new Transform(oF06, (v) => (new Vector3D(-v.z, -v.x, -v.y))),
 	]);
 	let s06 = new Solid(oS06, new Color(0xCC, 0x99, 0xFF, 0.8));
-	let painter06 = new Painter(document.querySelector('canvas.p04'), vLight, focal, size);
+	let painter06 = new Painter(document.querySelector('canvas.p06'), vLight, focal, size);
 	let startTime = Date.now();
 	let DrawFrame = function () {
 		let deg = (Date.now() - startTime) * 45 / 1000;
@@ -33,7 +33,7 @@ let CosDeg = (deg) => (Math.cos(deg * Math.PI / 180));
 			v.y * CosDeg(15) - (v.z * CosDeg(deg) - v.x * SinDeg(deg)) * SinDeg(15),
 			(v.z * CosDeg(deg) - v.x * SinDeg(deg)) * CosDeg(15) + v.y * SinDeg(15),
 		))));
-		requestAnimationFrame(DrawFrame);
+		// requestAnimationFrame(DrawFrame);
 	};
 	requestAnimationFrame(DrawFrame);
 }();

@@ -196,8 +196,10 @@ let Transform = class {
 	base = null;
 	/** @type {(v: Vector3D) => Vector3D} */
 	Action = null;
-	constructor(base) {
+	/** @type {(base: any, Action: (v: Vector3D) => Vector3)} */
+	constructor(base, Action) {
 		this.base = base;
+		this.Action = Action;
 	};
 };
 

@@ -1,7 +1,7 @@
 
 let vLight = new Vector3D(0, 3, 4);
 let focal = 12;
-let size = 480;
+let size = 288;
 let color = new Color(0xCC, 0x99, 0xFF, 0.8);
 
 let SinDeg = (deg) => (Math.sin(deg * Math.PI / 180));

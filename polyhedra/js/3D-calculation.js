@@ -277,13 +277,11 @@ Face.prototype.Map = function (Acrion) {
 };
 
 Face.prototype.ZIndex = function () {
-	let zIndex = - Infinity;
+	let sum = 0;
 	for (let vertex of this.listVertex) {
-		if (vertex.z > zIndex) {
-			zIndex = vertex.z;
-		};
+		sum += vertex.z;
 	};
-	return zIndex;
+	return sum / this.listVertex.length;
 };
 
 Face.prototype.Normal = function () {

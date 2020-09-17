@@ -162,7 +162,7 @@ Vector3D.prototype.Map = function (Acrion) {
 
 /** @type {(focal: number) => Vector2D} */
 Vector3D.prototype.Projection = function (focal) {
-	let r = focal / (focal + this.z);
+	let r = focal / (focal - this.z);
 	return new Vector2D(
 		this.x * r,
 		this.y * r,

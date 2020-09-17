@@ -13,7 +13,7 @@ html {
 
 body {
 	width: 1080px;
-	max-width: 100%;
+	max-width: 94%;
 	min-height: 100%;
 	margin: 0 auto;
 }
@@ -51,6 +51,7 @@ p {
 image, canvas {
 	display: block;
 	margin: 0 auto;
-	border: solid 1px #EEE;
 	max-width: 100%;
+	background-color: #FFF;
+	box-shadow: 0 0 4px 3px rgba(0, 0, 0, 0.15);
 }

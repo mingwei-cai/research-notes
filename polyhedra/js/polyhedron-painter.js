@@ -405,7 +405,7 @@ Painter.prototype.Draw = function (data, lineWidth = 3) {
 			ctx.lineTo(this.ox + vertex.x * this.scale, this.oy - vertex.y * this.scale);
 		};
 		ctx.closePath();
-		ctx.fillStyle = polygon.color;
+		ctx.fillStyle = polygon.color.Style();
 		ctx.fill();
 		ctx.stroke();
 	};

@@ -30,12 +30,11 @@ Color.prototype.Over = function (color) {
 		return this;
 	};
 	let a = a0 + a1;
-	let p0 = a0 / a;
-	let p1 = a1 / a;
+	let p = a0 / a;
 	return new Color(
-		this.r * p0 + color.r * p1,
-		this.g * p0 + color.g * p1,
-		this.b * p0 + color.b * p1,
+		color.r + (this.r - color.r) * p,
+		color.g + (this.g - color.g) * p,
+		color.b + (this.b - color.b) * p,
 		a,
 	);
 };

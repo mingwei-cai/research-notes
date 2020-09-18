@@ -19,6 +19,27 @@ Color.prototype.Style = function () {
 	return 'rgba(' + [this.r, this.g, this.b, this.a].join() + ')';
 };
 
+/** @type {(color: Color) => Color} */
+Color.prototype.Over = function (color) {
+	let a0 = this.a;
+	if (a0 == 0) {
+		return color;
+	};
+	let a1 = color.a * (1 - a0);
+	if (a1 == 0) {
+		return this;
+	};
+	let a = a0 + a1;
+	let p0 = a0 / a;
+	let p1 = a1 / a;
+	return new Color(
+		this.r * p0 + color.r * p1,
+		this.g * p0 + color.g * p1,
+		this.b * p0 + color.b * p1,
+		a,
+	);
+};
+
 Color.default = new Color(0, 0, 0, 0);
 
 let Vector2D = class {
@@ -238,16 +259,9 @@ Coloration.prototype.ListFace = function (m) {
 	if (m.has(this)) {
 		return m.get(this);
 	};
-	let a = this.color.a;
-	let t = 1 - a;
 	let listFace = this.data.ListFace(m).map((face) => (new Polygon3D(
 		face.listVertex,
-		new Color(
-			this.color.r * a + face.color.r * t,
-			this.color.g * a + face.color.g * t,
-			this.color.b * a + face.color.b * t,
-			a + face.color.a * t,
-		),
+		this.color.Over(face.color),
 	)));
 	m.set(this, listFace);
 	return listFace;

@@ -358,7 +358,7 @@ let Painter = class {
 		this.focal = focal;
 		this.ox = cvs.width / 2;
 		this.oy = cvs.height / 2;
-		this.scale = (this.ox < this.oy ? this.ox : this.oy);
+		this.scale = (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (focal * focal)) * 0.96;
 	};
 };
 
@@ -368,7 +368,7 @@ Painter.prototype.Resize = function (w, h, scale = 0) {
 	this.cvs.height = h;
 	this.ox = w / 2;
 	this.oy = h / 2;
-	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy);
+	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (this.focal * this.focal)) * 0.96;
 };
 
 /** @type {(data: FaceData) => Polygon2D[]} */

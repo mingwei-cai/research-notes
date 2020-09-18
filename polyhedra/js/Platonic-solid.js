@@ -26,7 +26,7 @@ let startTime = Date.now();
 	]);
 	let DrawFrame = function () {
 		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
-		let arcY = Math.PI / 8;
+		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
 		let cosX = Math.cos(arcX);
@@ -60,7 +60,7 @@ let startTime = Date.now();
 	]);
 	let DrawFrame = function () {
 		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
-		let arcY = Math.PI / 8;
+		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
 		let cosX = Math.cos(arcX);
@@ -95,7 +95,7 @@ let startTime = Date.now();
 	]);
 	let DrawFrame = function () {
 		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
-		let arcY = Math.PI / 8;
+		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
 		let cosX = Math.cos(arcX);
@@ -137,7 +137,7 @@ let startTime = Date.now();
 	]);
 	let DrawFrame = function () {
 		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
-		let arcY = Math.PI / 8;
+		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
 		let cosX = Math.cos(arcX);
@@ -189,7 +189,7 @@ let startTime = Date.now();
 	]);
 	let DrawFrame = function () {
 		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
-		let arcY = Math.PI / 8;
+		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
 		let cosX = Math.cos(arcX);

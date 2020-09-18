@@ -79,34 +79,29 @@ Vector2D.prototype.Length = function () {
 	return Math.sqrt(this.Dot(this));
 };
 
-/** @type {(listVertex: Vector2D[]) => number} */
-Vector2D.GetArea = function (listVertex) {
-	let area = 0;
-	let v0 = listVertex[0];
-	let vA = listVertex[1].Sub(v0);
-	let n = listVertex.length;
-	for (let i = 2; i < n; ++i) {
-		let vB = listVertex[2].Sub(v0);
-		area += vA.Cross(vB);
-		vA = vB;
-	};
-	return area / 2;
-};
-
 let Polygon2D = class {
 	/** @type {Vector2D[]} */
 	listVertex = null;
 	/** @type {Color} */
 	color = null;
 	/** @type {(listVertex: Vector2D[], color: Color)} */
-	constructor(listVertex, color) {
+	constructor(listVertex, color = Color.default) {
 		this.listVertex = listVertex;
 		this.color = color;
 	};
 };
 
 Polygon2D.prototype.Area = function () {
-	return Vector2D.GetArea(this.listVertex);
+	let area = 0;
+	let v0 = this.listVertex[0];
+	let vA = this.listVertex[1].Sub(v0);
+	let n = this.listVertex.length;
+	for (let i = 2; i < n; ++i) {
+		let vB = this.listVertex[2].Sub(v0);
+		area += vA.Cross(vB);
+		vA = vB;
+	};
+	return area / 2;
 };
 
 // ======================== basic 3D caculation ========================
@@ -196,20 +191,6 @@ Vector3D.prototype.Projection = function (focal) {
 	);
 };
 
-/** @type {(listVertex: Vector3D[]) => Vector3D} */
-Vector3D.GetNormal = function (listVertex) {
-	let vNormal = new Vector3D(0, 0, 0);
-	let v0 = listVertex[0];
-	let vA = listVertex[1].Sub(v0);
-	let n = listVertex.length;
-	for (let i = 2; i < n; ++i) {
-		let vB = listVertex[2].Sub(v0);
-		vNormal = vNormal.Add(vA.Cross(vB));
-		vA = vB;
-	};
-	return vNormal;
-};
-
 let Polygon3D = class {
 	/** @type {Vector3D[]} */
 	listVertex = null;
@@ -223,15 +204,27 @@ let Polygon3D = class {
 };
 
 Polygon3D.prototype.Normal = function () {
-	return Vector3D.GetNormal(this.listVertex);
+	let vNormal = new Vector3D(0, 0, 0);
+	let v0 = this.listVertex[0];
+	let vA = this.listVertex[1].Sub(v0);
+	let n = this.listVertex.length;
+	for (let i = 2; i < n; ++i) {
+		let vB = this.listVertex[2].Sub(v0);
+		vNormal = vNormal.Add(vA.Cross(vB));
+		vA = vB;
+	};
+	return vNormal;
 };
 
-Polygon3D.prototype.ZIndex = function () {
-	let sum = 0;
-	for (let vertex of this.listVertex) {
-		sum += vertex.z;
-	};
-	return sum / this.listVertex.length;
+Polygon3D.prototype.Center = function () {
+	let vNormal = this.Normal();
+	let v0 = this.listVertex[0];
+	return vNormal.Mul(vNormal.Dot(v0) / vNormal.Dot(vNormal));
+};
+
+/** @type {(vFocal: Vector3D) => number} */
+Polygon3D.prototype.ZIndex = function (vFocal) {
+	return -this.Center().Sub(vFocal).Length();
 };
 
 /** @type {(m: WeakMap<any, Polygon3D[]>) => Polygon3D[]} */
@@ -254,15 +247,16 @@ Polygon3D.prototype.Map = function (Trans) {
 
 /** @type {(vLight: Vector3D, focal: number) => Polygon2D} */
 Polygon3D.prototype.Projection = function (vLight, focal) {
-	let listVertex = this.listVertex.map((v) => (v.Projection(focal)))
+	let result = new Polygon2D(this.listVertex.map((v) => (v.Projection(focal))));
 	let vNormal = this.Normal().Uint();
-	let light = (1 + (GetArea(listVertex) < 0 ? -1 : 1) * vLight.Dot(vNormal)) / 2;
-	return new Polygon2D(listVertex, new Color(
+	let light = (1 + (result.Area() < 0 ? -1 : 1) * vLight.Dot(vNormal)) / 2;
+	result.color = new Color(
 		this.color.r * light,
 		this.color.g * light,
 		this.color.b * light,
 		this.color.a,
-	));
+	);
+	return result;
 };
 
 // ======================== batch process ========================
@@ -340,7 +334,7 @@ Batch.prototype.ListFace = function (m) {
 	/** @type {Polygon3D[]} */
 	let listFace = [];
 	for (let data of this.listData) {
-		listFace.push(...data.ListFace());
+		listFace.push(...data.ListFace(m));
 	};
 	m.set(this, listFace);
 	return listFace;
@@ -354,9 +348,9 @@ let Painter = class {
 	/** @type {Vector3D} */
 	vLight = null;
 	focal = 0;
-	scale = 0;
 	ox = 0;
 	oy = 0;
+	scale = 0;
 	/** @type {(cvs: HTMLCanvasElement, vLight: Vector3D, focal: number)} */
 	constructor(cvs, vLight, focal) {
 		this.cvs = cvs;
@@ -377,16 +371,37 @@ Painter.prototype.Resize = function (w, h, scale = 0) {
 	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy);
 };
 
+/** @type {(data: FaceData) => Polygon2D[]} */
+Painter.prototype.ListPolygon = function (data) {
+	let vFocal = new Vector3D(0, 0, this.focal);
+	let listFace = data.ListFace(new WeakMap());
+	let listZIndex = listFace.map((face) => (face.ZIndex(vFocal)));
+	let n = listFace.length;
+	for (let i = 1; i < n; ++i) {
+		let face = listFace[i];
+		let zIndex = listZIndex[i];
+		let j = i;
+		while (j >= 1 && listZIndex[j - 1] > zIndex) {
+			listFace[j] = listFace[j - 1];
+			listZIndex[j] = listZIndex[j - 1];
+			--j;
+		};
+		listFace[j] = face;
+		listZIndex[j] = zIndex;
+	};
+	return listFace.map((face) => (face.Projection(this.vLight, this.focal)));
+};
+
 /** @type {(data: FaceData, lineWidth: number) => void} */
 Painter.prototype.Draw = function (data, lineWidth = 3) {
 	let ctx = this.cvs.getContext('2d');
 	ctx.clearRect(0, 0, +this.cvs.width, +this.cvs.height);
 	ctx.lineWidth = lineWidth;
 	ctx.lineJoin = 'round';
-	let listFace = data.ListFace();
-	for (let face of listFace) {
+	let listPolygon = this.ListPolygon(data);
+	for (let polygon of listPolygon) {
 		ctx.beginPath();
-		for (let vertex of face.listVertex) {
+		for (let vertex of polygon.listVertex) {
 			ctx.lineTo(this.ox + vertex.x * this.scale, this.oy - vertex.y * this.scale);
 		};
 		ctx.closePath();

@@ -7,7 +7,7 @@ let Color = class {
 	b = 0;
 	a = 0;
 	/** @type {(r: number, g: number, b: number, a: number)} */
-	constructor(r, g, b, a) {
+	constructor(r, g, b, a = 1) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
@@ -16,8 +16,10 @@ let Color = class {
 };
 
 Color.prototype.Style = function () {
-	return 'rgba(' + [this.r, this.g, this.b, this.a].join(',') + ')';
+	return 'rgba(' + [this.r, this.g, this.b, this.a].join() + ')';
 };
+
+Color.default = new Color(0, 0, 0, 0);
 
 // ======================== basic 2D caculation ========================
 
@@ -78,7 +80,7 @@ Vector2D.prototype.Length = function () {
 };
 
 /** @type {(listVertex: Vector2D[]) => number} */
-let GetArea = function (listVertex) {
+Vector2D.GetArea = function (listVertex) {
 	let area = 0;
 	let v0 = listVertex[0];
 	let vA = listVertex[1].Sub(v0);
@@ -104,7 +106,7 @@ let Polygon2D = class {
 };
 
 Polygon2D.prototype.Area = function () {
-	return GetArea(this.listVertex);
+	return Vector2D.GetArea(this.listVertex);
 };
 
 // ======================== basic 3D caculation ========================
@@ -180,9 +182,9 @@ Vector3D.prototype.Uint = function () {
 	return (r > 0 ? this.Div(r) : this);
 };
 
-/** @type {(m: WeakMap) => Vector3D} */
-Vector3D.prototype.Value = function (m) {
-	return this;
+/** @type {(Trans: (v: Vector3D) => Vector3D) => Vector3D} */
+Vector3D.prototype.Map = function (Trans) {
+	return Trans(this);
 };
 
 /** @type {(focal: number) => Vector2D} */
@@ -195,7 +197,7 @@ Vector3D.prototype.Projection = function (focal) {
 };
 
 /** @type {(listVertex: Vector3D[]) => Vector3D} */
-let GetNormal = function (listVertex) {
+Vector3D.GetNormal = function (listVertex) {
 	let vNormal = new Vector3D(0, 0, 0);
 	let v0 = listVertex[0];
 	let vA = listVertex[1].Sub(v0);
@@ -214,14 +216,14 @@ let Polygon3D = class {
 	/** @type {Color} */
 	color = null;
 	/** @type {(listVertex: Vector3D[], color: Color)} */
-	constructor(listVertex, color) {
+	constructor(listVertex, color = Color.default) {
 		this.listVertex = listVertex;
 		this.color = color;
 	};
 };
 
 Polygon3D.prototype.Normal = function () {
-	return GetNormal(this.listVertex);
+	return Vector3D.GetNormal(this.listVertex);
 };
 
 Polygon3D.prototype.ZIndex = function () {
@@ -232,10 +234,20 @@ Polygon3D.prototype.ZIndex = function () {
 	return sum / this.listVertex.length;
 };
 
-/** @type {(Acrion: (v: Vector3D) => Vector3D) => Face} */
-Polygon3D.prototype.Map = function (Acrion) {
+/** @type {(m: WeakMap<any, Polygon3D[]>) => Polygon3D[]} */
+Polygon3D.prototype.ListFace = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let listFace = [this];
+	m.set(listFace)
+	return listFace;
+};
+
+/** @type {(Trans: (v: Vector3D) => Vector3D) => Polygon3D} */
+Polygon3D.prototype.Map = function (Trans) {
 	return new Polygon3D(
-		this.listVertex.map((vertex) => (Acrion(vertex))),
+		this.listVertex.map(Trans),
 		this.color,
 	);
 };
@@ -243,12 +255,8 @@ Polygon3D.prototype.Map = function (Acrion) {
 /** @type {(vLight: Vector3D, focal: number) => Polygon2D} */
 Polygon3D.prototype.Projection = function (vLight, focal) {
 	let listVertex = this.listVertex.map((v) => (v.Projection(focal)))
-	let vNormal = this.Normal();
-	let cos = vLight.Dot(vNormal) / (vLight.Length() * vNormal.Length());
-	if (GetArea(listVertex) < 0) {
-		cos = -cos;
-	};
-	let light = (1 + cos) / 2;
+	let vNormal = this.Normal().Uint();
+	let light = (1 + (GetArea(listVertex) < 0 ? -1 : 1) * vLight.Dot(vNormal)) / 2;
 	return new Polygon2D(listVertex, new Color(
 		this.color.r * light,
 		this.color.g * light,
@@ -258,3 +266,132 @@ Polygon3D.prototype.Projection = function (vLight, focal) {
 };
 
 // ======================== batch process ========================
+
+/** @typedef {{ListFace: (m: WeakMap<any, Polygon3D[]>) => Polygon3D[]}} FaceData */
+'JSDoc @typedef FaceData';
+
+let Transformation = class {
+	/** @type {FaceData} */
+	data = null;
+	/** @type {(v: Vector3D) => Vector3D} */
+	Trans = null;
+	/** @type {(data: FaceData, Trans: (v: Vector3D) => Vector3D)} */
+	constructor(data, Trans) {
+		this.data = data;
+		this.Trans = Trans;
+	};
+};
+
+/** @type {(m: WeakMap<any, Polygon3D[]>) => Polygon3D[]} */
+Transformation.prototype.ListFace = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let listFace = this.data.ListFace(m).map((face) => (face.Map(this.Trans)));
+	m.set(this, listFace);
+	return listFace;
+};
+
+let Coloration = class {
+	/** @type {FaceData} */
+	data = null;
+	/** @type {Color} */
+	color = null;
+	/** @type {(data: FaceData, color: Color} */
+	constructor(data, color) {
+		this.data = data;
+		this.color = color;
+	};
+};
+
+/** @type {(m: WeakMap<any, Polygon3D[]>) => Polygon3D[]} */
+Coloration.prototype.ListFace = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let t = 1 - this.color.a;
+	let listFace = this.data.ListFace(m).map((face) => (new Polygon3D(
+		face.listVertex,
+		new Color(
+			this.color.r + face.color.r * t,
+			this.color.g + face.color.g * t,
+			this.color.b + face.color.b * t,
+			this.color.a + face.color.a * t,
+		),
+	)));
+	m.set(this, listFace);
+	return listFace;
+};
+
+let Batch = class {
+	/** @type {FaceData[]} */
+	listData = null;
+	/** @type {(listData: FaceData[]} */
+	constructor(listData) {
+		this.listData = listData;
+	};
+};
+
+/** @type {(m: WeakMap<any, Polygon3D[]>) => Polygon3D[]} */
+Batch.prototype.ListFace = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	/** @type {Polygon3D[]} */
+	let listFace = [];
+	for (let data of this.listData) {
+		listFace.push(...data.ListFace());
+	};
+	m.set(this, listFace);
+	return listFace;
+};
+
+// ======================== painter ========================
+
+let Painter = class {
+	/** @type {HTMLCanvasElement} */
+	cvs = null;
+	/** @type {Vector3D} */
+	vLight = null;
+	focal = 0;
+	scale = 0;
+	ox = 0;
+	oy = 0;
+	/** @type {(cvs: HTMLCanvasElement, vLight: Vector3D, focal: number)} */
+	constructor(cvs, vLight, focal) {
+		this.cvs = cvs;
+		this.vLight = vLight.Uint();
+		this.focal = focal;
+		this.ox = cvs.width / 2;
+		this.oy = cvs.height / 2;
+		this.scale = (this.ox < this.oy ? this.ox : this.oy);
+	};
+};
+
+/** @type {(w: number, h: number, scale: number)} */
+Painter.prototype.Resize = function (w, h, scale = 0) {
+	this.cvs.width = w;
+	this.cvs.height = h;
+	this.ox = w / 2;
+	this.oy = h / 2;
+	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy);
+};
+
+/** @type {(data: FaceData, lineWidth: number) => void} */
+Painter.prototype.Draw = function (data, lineWidth = 3) {
+	let ctx = this.cvs.getContext('2d');
+	ctx.clearRect(0, 0, +this.cvs.width, +this.cvs.height);
+	ctx.lineWidth = lineWidth;
+	ctx.lineJoin = 'round';
+	let listFace = data.ListFace();
+	for (let face of listFace) {
+		ctx.beginPath();
+		for (let vertex of face.listVertex) {
+			ctx.lineTo(this.ox + vertex.x * this.scale, this.oy - vertex.y * this.scale);
+		};
+		ctx.closePath();
+		ctx.fillStyle = polygon.color;
+		ctx.fill();
+		ctx.stroke();
+	};
+};

@@ -2,13 +2,27 @@
 let vLight = new Vector3D(0, 3, 4);
 let focal = 12;
 let color = new Color(0xCC, 0x99, 0xFF, 0.8);
+let lineWidth = 3;
 
 let painter04 = new Painter(document.querySelector('canvas.p04'), vLight, focal);
 let painter06 = new Painter(document.querySelector('canvas.p06'), vLight, focal);
 let painter08 = new Painter(document.querySelector('canvas.p08'), vLight, focal);
 let painter12 = new Painter(document.querySelector('canvas.p12'), vLight, focal);
 let painter20 = new Painter(document.querySelector('canvas.p20'), vLight, focal);
-let startTime = Date.now();
+
+/** @type {((timeSec: number) => void)[]} */
+let listAnimationFrame = [];
+
+!function () {
+	let Animation = function () {
+		let timeSec = performance.now() / 1000;
+		for (let DrawFrame of listAnimationFrame) {
+			DrawFrame(timeSec);
+		};
+		requestAnimationFrame(Animation);
+	};
+	requestAnimationFrame(Animation);
+}();
 
 // 正四面體
 !function () {
@@ -24,8 +38,9 @@ let startTime = Date.now();
 		new Transformation(face04, (v) => (new Vector3D(-v.x, +v.y, -v.z))),
 		new Transformation(face04, (v) => (new Vector3D(-v.x, -v.y, +v.z))),
 	]);
-	let DrawFrame = function () {
-		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function (timeSec) {
+		let arcX = timeSec * (Math.PI / 4);
 		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
@@ -35,10 +50,9 @@ let startTime = Date.now();
 			v.x * cosX + v.z * sinX,
 			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
 			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))));
-		requestAnimationFrame(DrawFrame);
+		))), lineWidth);
 	};
-	requestAnimationFrame(DrawFrame);
+	listAnimationFrame.push(DrawFrame);
 }();
 
 // 正六面體
@@ -58,8 +72,9 @@ let startTime = Date.now();
 		new Transformation(face06, (v) => (new Vector3D(-v.y, -v.z, -v.x))),
 		new Transformation(face06, (v) => (new Vector3D(-v.z, -v.x, -v.y))),
 	]);
-	let DrawFrame = function () {
-		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function (timeSec) {
+		let arcX = timeSec * (Math.PI / 4);
 		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
@@ -69,10 +84,9 @@ let startTime = Date.now();
 			v.x * cosX + v.z * sinX,
 			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
 			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))));
-		requestAnimationFrame(DrawFrame);
+		))), lineWidth);
 	};
-	requestAnimationFrame(DrawFrame);
+	listAnimationFrame.push(DrawFrame);
 }();
 
 // 正八面體
@@ -93,8 +107,9 @@ let startTime = Date.now();
 		new Transformation(face08, (v) => (new Vector3D(-v.x, -v.y, +v.z))),
 		new Transformation(face08, (v) => (new Vector3D(-v.x, -v.y, -v.z))),
 	]);
-	let DrawFrame = function () {
-		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function (timeSec) {
+		let arcX = timeSec * (Math.PI / 4);
 		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
@@ -104,10 +119,9 @@ let startTime = Date.now();
 			v.x * cosX + v.z * sinX,
 			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
 			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))));
-		requestAnimationFrame(DrawFrame);
+		))), lineWidth);
 	};
-	requestAnimationFrame(DrawFrame);
+	listAnimationFrame.push(DrawFrame);
 }();
 
 // 正十二面體
@@ -135,8 +149,9 @@ let startTime = Date.now();
 		new Transformation(face12, (v) => (new Vector3D(-v.z, +v.x, -v.y))),
 		new Transformation(face12, (v) => (new Vector3D(-v.z, -v.x, +v.y))),
 	]);
-	let DrawFrame = function () {
-		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function (timeSec) {
+		let arcX = timeSec * (Math.PI / 4);
 		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
@@ -146,10 +161,9 @@ let startTime = Date.now();
 			v.x * cosX + v.z * sinX,
 			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
 			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))));
-		requestAnimationFrame(DrawFrame);
+		))), lineWidth);
 	};
-	requestAnimationFrame(DrawFrame);
+	listAnimationFrame.push(DrawFrame);
 }();
 
 // 正二十面體
@@ -187,8 +201,9 @@ let startTime = Date.now();
 		new Transformation(face20B, (v) => (new Vector3D(-v.x, -v.y, +v.z))),
 		new Transformation(face20B, (v) => (new Vector3D(-v.x, -v.y, -v.z))),
 	]);
-	let DrawFrame = function () {
-		let arcX = ((Date.now() - startTime) / 1000) * (Math.PI / 4);
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function (timeSec) {
+		let arcX = timeSec * (Math.PI / 4);
 		let arcY = Math.PI / 16;
 		let sinX = Math.sin(arcX);
 		let sinY = Math.sin(arcY);
@@ -198,8 +213,7 @@ let startTime = Date.now();
 			v.x * cosX + v.z * sinX,
 			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
 			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))));
-		requestAnimationFrame(DrawFrame);
+		))), lineWidth);
 	};
-	requestAnimationFrame(DrawFrame);
+	listAnimationFrame.push(DrawFrame);
 }();

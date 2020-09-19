@@ -202,7 +202,8 @@ Polygon3D.prototype.Map = function (Trans) {
 Polygon3D.prototype.Projection = function (vLight, focal) {
 	let vNormal = this.Normal();
 	let v0 = this.listVertex[0];
-	let light = (1 + (vNormal.Dot(new Vector3D(v0.x, v0.y, v0.z - focal)) > 0 ? -1 : 1) * vLight.Dot(vNormal.Uint())) / 2;
+	let cos = vLight.Dot(vNormal.Uint()) * (vNormal.Dot(new Vector3D(v0.x, v0.y, v0.z - focal)) > 0 ? -1 : 1);
+	let light = (1 + cos) / 2;
 	return new Polygon2D(
 		this.listVertex.map((v) => (v.Projection(focal))),
 		new Color(
@@ -307,7 +308,7 @@ let Painter = class {
 		this.focal = focal;
 		this.ox = cvs.width / 2;
 		this.oy = cvs.height / 2;
-		this.scale = (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (focal * focal)) * 0.96;
+		this.scale = (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (focal * focal)) * 0.9;
 	};
 };
 
@@ -317,7 +318,7 @@ Painter.prototype.Resize = function (w, h, scale = 0) {
 	this.cvs.height = h;
 	this.ox = w / 2;
 	this.oy = h / 2;
-	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (this.focal * this.focal)) * 0.96;
+	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (this.focal * this.focal)) * 0.9;
 };
 
 /** @type {(data: FaceData) => Polygon2D[]} */
@@ -341,7 +342,7 @@ Painter.prototype.ListPolygon = function (data) {
 };
 
 /** @type {(data: FaceData, lineWidth: number) => void} */
-Painter.prototype.Draw = function (data, lineWidth = 3) {
+Painter.prototype.Draw = function (data, lineWidth = 0) {
 	let ctx = this.cvs.getContext('2d');
 	ctx.clearRect(0, 0, +this.cvs.width, +this.cvs.height);
 	ctx.lineWidth = lineWidth;
@@ -355,6 +356,8 @@ Painter.prototype.Draw = function (data, lineWidth = 3) {
 		ctx.closePath();
 		ctx.fillStyle = polygon.color.Style();
 		ctx.fill();
-		ctx.stroke();
+		if (lineWidth > 0) {
+			ctx.stroke();
+		};
 	};
 };

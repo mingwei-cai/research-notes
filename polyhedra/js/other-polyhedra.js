@@ -7,232 +7,262 @@ let vLight = new Vector3D(0, 3, 4);
 let focal = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
-
-/** @type {((timeSec: number) => void)[]} */
-let listAnimationFrame = [];
-
-!function () {
-	let Animation = function () {
-		let timeSec = performance.now() / 1000;
-		for (let DrawFrame of listAnimationFrame) {
-			DrawFrame(timeSec);
-		};
-		requestAnimationFrame(Animation);
-	};
-	requestAnimationFrame(Animation);
-}();
+let n = 5;
 
 // ======================== 稜柱 ========================
 
 !function () {
 	let painter = new Painter(document.querySelector('canvas.prism'), vLight, focal);
-	let vertexA = (new Vector3D(2, 1, 0)).Uint();
-	let vertexB = (new Vector3D(1, 1, Math.sqrt(3))).Uint();
-	let faceA = new Polygon3D([
-		vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		vertexA.Create((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-	], colorA);
-	let faceB = new Polygon3D([
-		vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, -v.y, +v.z))),
-		vertexA.Create((v) => (new Vector3D(+v.x, -v.y, +v.z))),
-	], colorA);
-	let faceC = new Polygon3D([
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, -v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, -v.y, +v.z))),
-	], colorA);
-	let solid = new Batch([
-		faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(+v.x, -v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceB.Map((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		faceC.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceC.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-	]);
-	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
-		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))), lineWidth);
+	let z = Math.sin(Math.PI / n);
+	/** @type {Vector3D[]} */
+	let listVertexA = [];
+	/** @type {Vector3D[]} */
+	let listVertexB = [];
+	for (let i = 0; i < n; ++i) {
+		let arc = Math.PI * (i * 2 + 1 - n) / n;
+		let x = Math.cos(arc);
+		let y = Math.sin(arc);
+		listVertexA.push(new Vector3D(x, y, +z));
+		listVertexB.push(new Vector3D(x, y, -z));
 	};
-	listAnimationFrame.push(DrawFrame);
+	/** @type {Polygon3D[]} */
+	let listFace = [];
+	for (let i = 1; i < n; ++i) {
+		listFace.push(new Polygon3D([
+			listVertexA[i - 1],
+			listVertexA[i],
+			listVertexB[i],
+			listVertexB[i - 1],
+		], colorA));
+	};
+	listFace.push(new Polygon3D([
+		listVertexA[n - 1],
+		listVertexA[0],
+		listVertexB[0],
+		listVertexB[n - 1],
+	], colorA));
+	listFace.push(new Polygon3D(listVertexA, colorA));
+	listFace.push(new Polygon3D(listVertexB, colorA));
+	let r = listVertexA[0].Length();
+	let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
+		painter.Draw(solid.Map((v) => (new Vector3D(
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
+		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
+	};
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 反稜柱 ========================
 
 !function () {
 	let painter = new Painter(document.querySelector('canvas.antiprism'), vLight, focal);
-	let vertexA = (new Vector3D(2, Math.sqrt(2 / (Math.sqrt(3) + 1)), 0)).Uint();
-	let vertexB = (new Vector3D(1, Math.sqrt(2 / (Math.sqrt(3) + 1)), Math.sqrt(3))).Uint();
-	let faceA = new Polygon3D([
-		vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		vertexA.Create((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-	], colorA);
-	let faceB = new Polygon3D([
-		vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-	], colorA);
-	let faceC = new Polygon3D([
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		vertexA.Create((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-	], colorA);
-	let solid = new Batch([
-		faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceB.Map((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		faceB.Map((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		faceB.Map((v) => (new Vector3D(-v.z, -v.y, +v.x))),
-		faceB.Map((v) => (new Vector3D(+v.z, -v.y, -v.x))),
-		faceB.Map((v) => (new Vector3D(-v.z, -v.y, -v.x))),
-		faceC.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceC.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceC.Map((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		faceC.Map((v) => (new Vector3D(-v.z, -v.y, +v.x))),
-	]);
-	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
-		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))), lineWidth);
+	let z = Math.sin(Math.PI / (n * 2)) * Math.sqrt(Math.cos(Math.PI / n) * 2 + 1);
+	/** @type {Vector3D[]} */
+	let listVertexA = [];
+	for (let i = 0; i < n; ++i) {
+		let arc = Math.PI * (i * 2 - n) / n;
+		let x = Math.cos(arc);
+		let y = Math.sin(arc);
+		listVertexA.push(new Vector3D(x, y, +z));
 	};
-	listAnimationFrame.push(DrawFrame);
+	/** @type {Vector3D[]} */
+	let listVertexB = [];
+	for (let i = 0; i < n; ++i) {
+		let arc = Math.PI * (i * 2 + 1 - n) / n;
+		let x = Math.cos(arc);
+		let y = Math.sin(arc);
+		listVertexB.push(new Vector3D(x, y, -z));
+	};
+	/** @type {Polygon3D[]} */
+	let listFace = [];
+	for (let i = 1; i < n; ++i) {
+		listFace.push(new Polygon3D([
+			listVertexA[i - 1],
+			listVertexB[i - 1],
+			listVertexA[i],
+		], colorA));
+		listFace.push(new Polygon3D([
+			listVertexB[i - 1],
+			listVertexA[i],
+			listVertexB[i],
+		], colorA));
+	};
+	listFace.push(new Polygon3D([
+		listVertexA[n - 1],
+		listVertexB[n - 1],
+		listVertexA[0],
+	], colorA));
+	listFace.push(new Polygon3D([
+		listVertexB[n - 1],
+		listVertexA[0],
+		listVertexB[0],
+	], colorA));
+	listFace.push(new Polygon3D(listVertexA, colorA));
+	listFace.push(new Polygon3D(listVertexB, colorA));
+	let r = listVertexA[0].Length();
+	let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
+		painter.Draw(solid.Map((v) => (new Vector3D(
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
+		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
+	};
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 雙角錐 ========================
 
 !function () {
 	let painter = new Painter(document.querySelector('canvas.bipyramid'), vLight, focal);
-	let vertexA = (new Vector3D(0, 1, 0)).Uint();
-	let vertexB = (new Vector3D(2, 0, 0)).Uint().Div(Math.sqrt(3));
-	let vertexC = (new Vector3D(1, 0, Math.sqrt(3))).Uint().Div(Math.sqrt(3));
-	let faceA = new Polygon3D([
-		vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexC.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-	], colorA);
-	let faceB = new Polygon3D([
-		vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexC.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexC.Create((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-	], colorA);
-	let solid = new Batch([
-		faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceA.Map((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		faceA.Map((v) => (new Vector3D(+v.x, -v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(+v.x, -v.y, -v.z))),
-		faceA.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(-v.x, -v.y, -v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, -v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, -v.y, -v.z))),
-	]);
-	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
-		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))), lineWidth);
+	let rh = 1 / Math.sin(Math.PI / n);
+	let rw = 1 / Math.cos(Math.PI / n);
+	let vertexA = new Vector3D(0, 0, +rh);
+	let vertexB = new Vector3D(0, 0, -rh);
+	/** @type {Vector3D[]} */
+	let listVertexA = [];
+	for (let i = 0; i < n; ++i) {
+		let arc = Math.PI * (i * 2 - n) / n;
+		let x = Math.cos(arc) * rw;
+		let y = Math.sin(arc) * rw;
+		listVertexA.push(new Vector3D(x, y, 0));
 	};
-	listAnimationFrame.push(DrawFrame);
+	/** @type {Polygon3D[]} */
+	let listFace = [];
+	for (let i = 1; i < n; ++i) {
+		listFace.push(new Polygon3D([
+			vertexA,
+			listVertexA[i - 1],
+			listVertexA[i],
+		], colorA));
+		listFace.push(new Polygon3D([
+			vertexB,
+			listVertexA[i - 1],
+			listVertexA[i],
+		], colorA));
+	};
+	listFace.push(new Polygon3D([
+		vertexA,
+		listVertexA[n - 1],
+		listVertexA[0],
+	], colorA));
+	listFace.push(new Polygon3D([
+		vertexB,
+		listVertexA[n - 1],
+		listVertexA[0],
+	], colorA));
+	let r = (rh > rw ? rh : rw);
+	let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
+		painter.Draw(solid.Map((v) => (new Vector3D(
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
+		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
+	};
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 反雙角錐 ========================
 
 !function () {
 	let painter = new Painter(document.querySelector('canvas.antibipyramid'), vLight, focal);
-	let vertexA = (new Vector3D(Math.sqrt(3), Math.sqrt(2 / (Math.sqrt(3) + 1)), -1));
-	let vertexB = (new Vector3D(2, -Math.sqrt(2 / (Math.sqrt(3) + 1)), 0));
-	let vertexC = (new Vector3D(Math.sqrt(3), Math.sqrt(2 / (Math.sqrt(3) + 1)), +1));
-	let vertexD = (new Vector3D(1, -Math.sqrt(2 / (Math.sqrt(3) + 1)), Math.sqrt(3)));
-	let vertexE = (new Vector3D(0, Math.sqrt(2 / (Math.sqrt(3) + 1)), 0));
-	let vertexF = vertexA.Add(vertexB).Add(vertexC).Div(3);
-	let vertexG = vertexD.Add(vertexB).Add(vertexC).Div(3);
-	let vertexH = vertexE.Uint();
-	let vertexI = vertexF.Div(vertexF.Dot(vertexF) / vertexE.Length());
-	let vertexJ = vertexG.Div(vertexG.Dot(vertexG) / vertexE.Length());
-	let faceA = new Polygon3D([
-		vertexH.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexI.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexJ.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexJ.Create((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-	], colorA);
-	let faceB = new Polygon3D([
-		vertexH.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		vertexJ.Create((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		vertexI.Create((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		vertexJ.Create((v) => (new Vector3D(-v.z, -v.y, +v.x))),
-	], colorA);
-	let solid = new Batch([
-		faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceA.Map((v) => (new Vector3D(-v.x, +v.y, +v.z))),
-		faceA.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-		faceA.Map((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		faceA.Map((v) => (new Vector3D(-v.z, -v.y, +v.x))),
-		faceA.Map((v) => (new Vector3D(+v.z, -v.y, -v.x))),
-		faceA.Map((v) => (new Vector3D(-v.z, -v.y, -v.x))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-		faceB.Map((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-		faceB.Map((v) => (new Vector3D(+v.z, -v.y, +v.x))),
-		faceB.Map((v) => (new Vector3D(-v.z, -v.y, +v.x))),
-	]);
-	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
-		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
-		))), lineWidth);
+	let t = Math.sin(Math.PI / (n * 2)) * Math.sqrt(Math.cos(Math.PI / n) * 2 + 1);
+	let z = t / (Math.cos(Math.PI / n) * 2 + 1);
+	let rh = (Math.cos(Math.PI / n) + 1) / (t * 2);
+	let vertexA = new Vector3D(0, 0, +rh);
+	let vertexB = new Vector3D(0, 0, -rh);
+	/** @type {Vector3D[]} */
+	let listVertexA = [];
+	for (let i = 0; i < n; ++i) {
+		let arc = Math.PI * (i * 2 - n) / n;
+		let x = Math.cos(arc);
+		let y = Math.sin(arc);
+		listVertexA.push(new Vector3D(x, y, -z));
 	};
-	listAnimationFrame.push(DrawFrame);
+	/** @type {Vector3D[]} */
+	let listVertexB = [];
+	for (let i = 0; i < n; ++i) {
+		let arc = Math.PI * (i * 2 + 1 - n) / n;
+		let x = Math.cos(arc);
+		let y = Math.sin(arc);
+		listVertexB.push(new Vector3D(x, y, +z));
+	};
+	/** @type {Polygon3D[]} */
+	let listFace = [];
+	for (let i = 1; i < n; ++i) {
+		listFace.push(new Polygon3D([
+			vertexB,
+			listVertexA[i - 1],
+			listVertexB[i - 1],
+			listVertexA[i],
+		], colorA));
+		listFace.push(new Polygon3D([
+			vertexA,
+			listVertexB[i - 1],
+			listVertexA[i],
+			listVertexB[i],
+		], colorA));
+	};
+	listFace.push(new Polygon3D([
+		vertexB,
+		listVertexA[n - 1],
+		listVertexB[n - 1],
+		listVertexA[0],
+	], colorA));
+	listFace.push(new Polygon3D([
+		vertexA,
+		listVertexB[n - 1],
+		listVertexA[0],
+		listVertexB[0],
+	], colorA));
+	let rw = listVertexA[0].Length();
+	let r = (rh > rw ? rh : rw);
+	let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+	/** @type {(timeSec: number) => void} */
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
+		painter.Draw(solid.Map((v) => (new Vector3D(
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
+		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
+	};
+	requestAnimationFrame(DrawFrame);
 }();

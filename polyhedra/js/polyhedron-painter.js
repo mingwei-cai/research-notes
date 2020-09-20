@@ -1,5 +1,10 @@
 
-// ======================== canvas element ========================
+// 雖然 canvas 本身就支援用 WebGL 來實現 3D 作圖
+// 但這份程式碼是用 2D 來模擬 3D
+// 這僅為滿足個人研究興趣
+// 不建議將這份程式碼直接用於實際應用
+
+// ======================== canvas 相關物件 ========================
 
 let Color = class {
 	r = 0;
@@ -57,13 +62,13 @@ let Polygon2D = class {
 	/** @type {Color} */
 	color = null;
 	/** @type {(listVertex: Vector2D[], color: Color)} */
-	constructor(listVertex, color = Color.default) {
+	constructor(listVertex, color = null) {
 		this.listVertex = listVertex;
-		this.color = color;
+		this.color = color || Color.default;
 	};
 };
 
-// ======================== basic 3D caculation ========================
+// ======================== 基本 3D 運算 ========================
 
 let Vector3D = class {
 	x = 0;
@@ -137,7 +142,7 @@ Vector3D.prototype.Uint = function () {
 };
 
 /** @type {(Trans: (v: Vector3D) => Vector3D) => Vector3D} */
-Vector3D.prototype.Map = function (Trans) {
+Vector3D.prototype.Create = function (Trans) {
 	return Trans(this);
 };
 
@@ -156,9 +161,9 @@ let Polygon3D = class {
 	/** @type {Color} */
 	color = null;
 	/** @type {(listVertex: Vector3D[], color: Color)} */
-	constructor(listVertex, color = Color.default) {
+	constructor(listVertex, color = null) {
 		this.listVertex = listVertex;
-		this.color = color;
+		this.color = color || Color.default;
 	};
 };
 
@@ -191,7 +196,7 @@ Polygon3D.prototype.ListFace = function (m) {
 };
 
 /** @type {(Trans: (v: Vector3D) => Vector3D) => Polygon3D} */
-Polygon3D.prototype.Map = function (Trans) {
+Polygon3D.prototype.Create = function (Trans) {
 	return new Polygon3D(
 		this.listVertex.map(Trans),
 		this.color,
@@ -215,7 +220,7 @@ Polygon3D.prototype.Projection = function (vLight, focal) {
 	);
 };
 
-// ======================== batch process ========================
+// ======================== 批次變換 ========================
 
 /** @typedef {{ListFace: (m: WeakMap<any, Polygon3D[]>) => Polygon3D[]}} FaceData */
 'JSDoc @typedef FaceData';
@@ -237,7 +242,7 @@ Transformation.prototype.ListFace = function (m) {
 	if (m.has(this)) {
 		return m.get(this);
 	};
-	let listFace = this.data.ListFace(m).map((face) => (face.Map(this.Trans)));
+	let listFace = this.data.ListFace(m).map((face) => (face.Create(this.Trans)));
 	m.set(this, listFace);
 	return listFace;
 };
@@ -290,7 +295,15 @@ Batch.prototype.ListFace = function (m) {
 	return listFace;
 };
 
-// ======================== painter ========================
+/** @type {(Trans: (v: Vector3D) => Vector3D) => Transformation} */
+Polygon3D.prototype.Map = function (Trans) {
+	return new Transformation(this, Trans);
+};
+Transformation.prototype.Map = Polygon3D.prototype.Map;
+Coloration.prototype.Map = Polygon3D.prototype.Map;
+Batch.prototype.Map = Polygon3D.prototype.Map;
+
+// ======================== 實際作畫邏輯 ========================
 
 let Painter = class {
 	/** @type {HTMLCanvasElement} */

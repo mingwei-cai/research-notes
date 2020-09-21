@@ -8,20 +8,6 @@ let focal = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-/** @type {((timeSec: number) => void)[]} */
-let listAnimationFrame = [];
-
-!function () {
-	let Animation = function () {
-		let timeSec = performance.now() / 1000;
-		for (let DrawFrame of listAnimationFrame) {
-			DrawFrame(timeSec);
-		};
-		requestAnimationFrame(Animation);
-	};
-	requestAnimationFrame(Animation);
-}();
-
 // ======================== 正四面體 ========================
 
 !function () {
@@ -39,20 +25,22 @@ let listAnimationFrame = [];
 		faceA.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
 	]);
 	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
 		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
 		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
 	};
-	listAnimationFrame.push(DrawFrame);
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 正六面體 ========================
@@ -75,20 +63,22 @@ let listAnimationFrame = [];
 		faceA.Map((v) => (new Vector3D(-v.z, -v.x, -v.y))),
 	]);
 	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
 		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
 		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
 	};
-	listAnimationFrame.push(DrawFrame);
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 正八面體 ========================
@@ -112,20 +102,22 @@ let listAnimationFrame = [];
 		faceA.Map((v) => (new Vector3D(-v.x, -v.y, -v.z))),
 	]);
 	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
 		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
 		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
 	};
-	listAnimationFrame.push(DrawFrame);
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 正十二面體 ========================
@@ -156,20 +148,22 @@ let listAnimationFrame = [];
 		faceA.Map((v) => (new Vector3D(-v.z, -v.x, +v.y))),
 	]);
 	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
 		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
 		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
 	};
-	listAnimationFrame.push(DrawFrame);
+	requestAnimationFrame(DrawFrame);
 }();
 
 // ======================== 正二十面體 ========================
@@ -210,18 +204,20 @@ let listAnimationFrame = [];
 		faceB.Map((v) => (new Vector3D(-v.x, -v.y, -v.z))),
 	]);
 	/** @type {(timeSec: number) => void} */
-	let DrawFrame = function (timeSec) {
-		let arcX = timeSec * (Math.PI / 4);
-		let arcY = Math.PI / 16;
-		let sinX = Math.sin(arcX);
-		let sinY = Math.sin(arcY);
-		let cosX = Math.cos(arcX);
-		let cosY = Math.cos(arcY);
+	let DrawFrame = function () {
+		let timeSec = performance.now() / 1000;
+		let arcXY = timeSec * (Math.PI / 4);
+		let arcZY = Math.PI * (0.5 - 1 / 16);
+		let sinXY = Math.sin(arcXY);
+		let sinZY = Math.sin(arcZY);
+		let cosXY = Math.cos(arcXY);
+		let cosZY = Math.cos(arcZY);
 		painter.Draw(solid.Map((v) => (new Vector3D(
-			v.x * cosX + v.z * sinX,
-			v.y * cosY - (v.z * cosX - v.x * sinX) * sinY,
-			(v.z * cosX - v.x * sinX) * cosY + v.y * sinY,
+			v.x * cosXY - v.y * sinXY,
+			(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
+			v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
 		))), lineWidth);
+		requestAnimationFrame(DrawFrame);
 	};
-	listAnimationFrame.push(DrawFrame);
+	requestAnimationFrame(DrawFrame);
 }();

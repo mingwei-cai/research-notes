@@ -118,6 +118,15 @@ Vector3D.prototype.Div = function (k) {
 	);
 };
 
+/** @type {(v: Vector3D, k: number) => Vector3D} */
+Vector3D.prototype.MoveTo = function (v, k) {
+	return new Vector3D(
+		this.x + (v.x - this.x) * k,
+		this.y + (v.y - this.y) * k,
+		this.z + (v.z - this.z) * k,
+	);
+};
+
 /** @type {(v: Vector3D) => Vector3D} */
 Vector3D.prototype.Cross = function (v) {
 	return new Vector3D(
@@ -153,6 +162,15 @@ Vector3D.prototype.Projection = function (focal) {
 		this.x * r,
 		this.y * r,
 	);
+};
+
+/** @type {(v0: Vector3D, v1: Vector3D, v2: Vector3D) => Vector3D} */
+Vector3D.GetIntersection = function (v0, v1, v2) {
+	let u0 = v1.Cross(v2);
+	let u1 = v2.Cross(v0);
+	let u2 = v0.Cross(v1);
+	let det = v0.Dot(u0);
+	return u0.Add(u1).Add(u2).Div(det);
 };
 
 let Polygon3D = class {
@@ -326,12 +344,12 @@ let Painter = class {
 };
 
 /** @type {(w: number, h: number, scale: number)} */
-Painter.prototype.Resize = function (w, h, scale = 0) {
+Painter.prototype.Resize = function (w, h) {
 	this.cvs.width = w;
 	this.cvs.height = h;
 	this.ox = w / 2;
 	this.oy = h / 2;
-	this.scale = scale || (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (this.focal * this.focal)) * 0.9;
+	this.scale = (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (this.focal * this.focal)) * 0.9;
 };
 
 /** @type {(data: FaceData) => Polygon2D[]} */
@@ -358,8 +376,10 @@ Painter.prototype.ListPolygon = function (data) {
 Painter.prototype.Draw = function (data, lineWidth = 0) {
 	let ctx = this.cvs.getContext('2d');
 	ctx.clearRect(0, 0, +this.cvs.width, +this.cvs.height);
-	ctx.lineWidth = lineWidth;
-	ctx.lineJoin = 'round';
+	if (lineWidth > 0) {
+		ctx.lineWidth = lineWidth;
+		ctx.lineJoin = 'round';
+	};
 	let listPolygon = this.ListPolygon(data);
 	for (let polygon of listPolygon) {
 		ctx.beginPath();

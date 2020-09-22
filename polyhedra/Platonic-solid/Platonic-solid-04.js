@@ -14,20 +14,22 @@ let vLight = new Vector3D(0, 3, 4);
 let focal = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
-
 let painter = new Painter(document.querySelector('canvas.Platonic-04'), vLight, focal);
-let vertexA = (new Vector3D(1, 1, 1)).Uint();
+
+let vertexA = new Vector3D(1, 1, 1);
 let faceA = new Polygon3D([
 	vertexA.Create((v) => (new Vector3D(-v.x, +v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, -v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
 ], colorA);
-let solid = new Batch([
+let listFace = [
 	faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	faceA.Map((v) => (new Vector3D(+v.x, -v.y, -v.z))),
 	faceA.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
 	faceA.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
-]);
+];
+let r = vertexA.Length();
+let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 
 /** @type {(timeSec: number) => void} */
 let DrawFrame = function (timeSec) {

@@ -27,16 +27,16 @@ let faceA = new Polygon3D([
 ], colorA);
 let listFace = [
 	faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-	faceA.Map((v) => (new Vector3D(+v.x, -v.y, -v.z))),
-	faceA.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-	faceA.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
 	faceA.Map((v) => (new Vector3D(+v.y, +v.z, +v.x))),
-	faceA.Map((v) => (new Vector3D(+v.y, -v.z, -v.x))),
-	faceA.Map((v) => (new Vector3D(-v.y, +v.z, -v.x))),
-	faceA.Map((v) => (new Vector3D(-v.y, -v.z, +v.x))),
 	faceA.Map((v) => (new Vector3D(+v.z, +v.x, +v.y))),
+	faceA.Map((v) => (new Vector3D(+v.x, -v.y, -v.z))),
+	faceA.Map((v) => (new Vector3D(+v.y, -v.z, -v.x))),
 	faceA.Map((v) => (new Vector3D(+v.z, -v.x, -v.y))),
+	faceA.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
+	faceA.Map((v) => (new Vector3D(-v.y, +v.z, -v.x))),
 	faceA.Map((v) => (new Vector3D(-v.z, +v.x, -v.y))),
+	faceA.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
+	faceA.Map((v) => (new Vector3D(-v.y, -v.z, +v.x))),
 	faceA.Map((v) => (new Vector3D(-v.z, -v.x, +v.y))),
 ];
 let r = vertexA.Length();

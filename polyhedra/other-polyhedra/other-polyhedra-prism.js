@@ -15,9 +15,9 @@ let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let n = 5;
-
 let painter = new Painter(document.querySelector('canvas.prism'), vLight, focalLength);
 let zA = Math.sin(Math.PI / n);
+
 /** @type {Vector3D[]} */
 let listVertexA = [];
 /** @type {Vector3D[]} */
@@ -37,16 +37,17 @@ for (let i = 1; i < n; ++i) {
 		listVertexA[i],
 		listVertexB[i],
 		listVertexB[i - 1],
-	], colorA));
+	], 0, colorA));
 };
 listFace.push(new Polygon3D([
 	listVertexA[n - 1],
 	listVertexA[0],
 	listVertexB[0],
 	listVertexB[n - 1],
-], colorA));
-listFace.push(new Polygon3D(listVertexA, colorA));
-listFace.push(new Polygon3D(listVertexB, colorA));
+], 0, colorA));
+listFace.push(new Polygon3D(listVertexA, 0, colorA));
+listFace.push(new Polygon3D(listVertexB, 0, colorA));
+
 let r = listVertexA[0].GetLength();
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 

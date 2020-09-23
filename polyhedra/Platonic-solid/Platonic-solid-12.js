@@ -15,16 +15,16 @@ let focal = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, focal);
+let vertexA = new Vector3D(2 / (Math.sqrt(5) + 1), (Math.sqrt(5) + 1) / 2, 0);
+let vertexB = new Vector3D(1, 1, 1);
 
-let vertexA = new Vector3D(2 / (Math.sqrt(5) + 1), 2 / (Math.sqrt(5) + 1), 2 / (Math.sqrt(5) + 1));
-let vertexB = new Vector3D(2 / (3 + Math.sqrt(5)), 1, 0);
 let faceA = new Polygon3D([
-	vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
+	vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	vertexB.Create((v) => (new Vector3D(+v.y, +v.z, +v.x))),
-	vertexB.Create((v) => (new Vector3D(+v.y, +v.z, -v.x))),
-	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-], colorA);
+	vertexA.Create((v) => (new Vector3D(+v.y, +v.z, -v.x))),
+	vertexB.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
+], 0, colorA);
 let listFace = [
 	faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	faceA.Map((v) => (new Vector3D(+v.y, +v.z, +v.x))),
@@ -39,6 +39,7 @@ let listFace = [
 	faceA.Map((v) => (new Vector3D(-v.y, -v.z, +v.x))),
 	faceA.Map((v) => (new Vector3D(-v.z, -v.x, +v.y))),
 ];
+
 let r = vertexA.GetLength();
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 

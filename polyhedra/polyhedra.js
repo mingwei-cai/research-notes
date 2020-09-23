@@ -164,6 +164,14 @@ Vector3D.prototype.Create = function (Trans) {
 	return Trans(this);
 };
 
+Vector3D.GetPartition = function (v0, v1, k) {
+	return new Vector3D(
+		v0.x + (v1.x - v0.x) * k,
+		v0.y + (v1.y - v0.y) * k,
+		v0.z + (v1.z - v0.z) * k,
+	);
+};
+
 /** @type {(v0: Vector3D, v1: Vector3D, v2: Vector3D) => Vector3D} */
 Vector3D.GetIntersection = function (v0, v1, v2) {
 	let u0 = v1.Cross(v2);
@@ -176,11 +184,13 @@ Vector3D.GetIntersection = function (v0, v1, v2) {
 let Polygon3D = class {
 	/** @type {Vector3D[]} */
 	listVertex = null;
+	order = 0;
 	/** @type {Color} */
 	color = null;
 	/** @type {(listVertex: Vector3D[], color: Color)} */
-	constructor(listVertex, color = null) {
+	constructor(listVertex, order, color = null) {
 		this.listVertex = listVertex;
+		this.order = order;
 		this.color = color || Color.transparent;
 	};
 };
@@ -198,9 +208,10 @@ Polygon3D.prototype.GetNormal = function () {
 	return vNormal;
 };
 
-Polygon3D.prototype.GetZIndex = function () {
+/** @type {(focalLength: number) => number} */
+Polygon3D.prototype.GetZIndex = function (focalLength) {
 	let vNormal = this.GetNormal();
-	return vNormal.z * vNormal.Dot(this.listVertex[0]) / vNormal.Dot(vNormal);
+	return (vNormal.z * focalLength / vNormal.Dot(this.listVertex[0]) < 1 ? ~this.order : this.order);
 };
 
 /** @type {(m: WeakMap<any, Polygon3D[]>) => Polygon3D[]} */
@@ -217,6 +228,7 @@ Polygon3D.prototype.ListFace = function (m) {
 Polygon3D.prototype.Create = function (Trans) {
 	return new Polygon3D(
 		this.listVertex.map(Trans),
+		this.order,
 		this.color,
 	);
 };
@@ -284,6 +296,7 @@ Coloration.prototype.ListFace = function (m) {
 	};
 	let listFace = this.data.ListFace(m).map((face) => (new Polygon3D(
 		face.listVertex,
+		face.order,
 		this.color.Over(face.color),
 	)));
 	m.set(this, listFace);
@@ -355,7 +368,7 @@ Painter.prototype.Resize = function (w, h) {
 /** @type {(data: FaceData) => Polygon2D[]} */
 Painter.prototype.ListPolygon = function (data) {
 	let listFace = data.ListFace(new WeakMap());
-	let listZIndex = listFace.map((face) => (face.GetZIndex()));
+	let listZIndex = listFace.map((face) => (face.GetZIndex(this.focalLength)));
 	let n = listFace.length;
 	for (let i = 1; i < n; ++i) {
 		let face = listFace[i];

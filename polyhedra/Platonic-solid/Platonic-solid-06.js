@@ -15,14 +15,14 @@ let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let painter = new Painter(document.querySelector('canvas.Platonic-06'), vLight, focalLength);
+let vertexA = new Vector3D(1, 1, 1);
 
-let vertexA = new Vector3D(Math.SQRT1_2, Math.SQRT1_2, Math.SQRT1_2);
 let faceA = new Polygon3D([
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, -v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, -v.y, -v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
-], colorA);
+], 0, colorA);
 let listFace = [
 	faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	faceA.Map((v) => (new Vector3D(+v.y, +v.z, +v.x))),
@@ -31,6 +31,7 @@ let listFace = [
 	faceA.Map((v) => (new Vector3D(-v.y, -v.z, -v.x))),
 	faceA.Map((v) => (new Vector3D(-v.z, -v.x, -v.y))),
 ];
+
 let r = vertexA.GetLength();
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 

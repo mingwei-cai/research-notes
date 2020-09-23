@@ -15,12 +15,12 @@ let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let n = 5;
-
 let painter = new Painter(document.querySelector('canvas.bipyramid'), vLight, focalLength);
 let rA = 1 / Math.cos(Math.PI / n);
 let zA = 1 / Math.sin(Math.PI / n);
 let vertexA = new Vector3D(0, 0, +zA);
 let vertexB = new Vector3D(0, 0, -zA);
+
 /** @type {Vector3D[]} */
 let listVertexA = [];
 for (let i = 0; i < n; ++i) {
@@ -36,23 +36,24 @@ for (let i = 1; i < n; ++i) {
 		vertexA,
 		listVertexA[i - 1],
 		listVertexA[i],
-	], colorA));
+	], 0, colorA));
 	listFace.push(new Polygon3D([
 		vertexB,
 		listVertexA[i - 1],
 		listVertexA[i],
-	], colorA));
+	], 0, colorA));
 };
 listFace.push(new Polygon3D([
 	vertexA,
 	listVertexA[n - 1],
 	listVertexA[0],
-], colorA));
+], 0, colorA));
 listFace.push(new Polygon3D([
 	vertexB,
 	listVertexA[n - 1],
 	listVertexA[0],
-], colorA));
+], 0, colorA));
+
 let r = (zA > rA ? zA : rA);
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 

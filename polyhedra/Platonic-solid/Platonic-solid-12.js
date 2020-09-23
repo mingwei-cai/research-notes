@@ -11,13 +11,13 @@ import {
 } from "../polyhedra.js";
 
 let vLight = new Vector3D(0, 3, 4);
-let focalLength = 12;
+let focal = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
-let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, focalLength);
+let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, focal);
 
-let vertexA = new Vector3D(1, 1, 1);
-let vertexB = new Vector3D(2 / (Math.sqrt(5) + 1), (Math.sqrt(5) + 1) / 2, 0);
+let vertexA = new Vector3D(2 / (Math.sqrt(5) + 1), 2 / (Math.sqrt(5) + 1), 2 / (Math.sqrt(5) + 1));
+let vertexB = new Vector3D(2 / (3 + Math.sqrt(5)), 1, 0);
 let faceA = new Polygon3D([
 	vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),

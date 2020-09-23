@@ -16,7 +16,7 @@ let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let painter = new Painter(document.querySelector('canvas.Platonic-20'), vLight, focalLength);
 
-let vertexA = new Vector3D(2 / (Math.sqrt(5) + 1), 2 / (3 + Math.sqrt(5)), 0);
+let vertexA = new Vector3D(1, 2 / (Math.sqrt(5) + 1), 0);
 let faceA = new Polygon3D([
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
 	vertexA.Create((v) => (new Vector3D(+v.z, +v.x, +v.y))),

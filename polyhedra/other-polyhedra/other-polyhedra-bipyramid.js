@@ -11,22 +11,22 @@ import {
 } from "../polyhedra.js";
 
 let vLight = new Vector3D(0, 3, 4);
-let focal = 12;
+let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let n = 5;
 
-let painter = new Painter(document.querySelector('canvas.bipyramid'), vLight, focal);
-let rh = 1 / Math.sin(Math.PI / n);
-let rw = 1 / Math.cos(Math.PI / n);
-let vertexA = new Vector3D(0, 0, +rh);
-let vertexB = new Vector3D(0, 0, -rh);
+let painter = new Painter(document.querySelector('canvas.bipyramid'), vLight, focalLength);
+let rA = 1 / Math.cos(Math.PI / n);
+let zA = 1 / Math.sin(Math.PI / n);
+let vertexA = new Vector3D(0, 0, +zA);
+let vertexB = new Vector3D(0, 0, -zA);
 /** @type {Vector3D[]} */
 let listVertexA = [];
 for (let i = 0; i < n; ++i) {
 	let arc = Math.PI * (i * 2 - n) / n;
-	let x = Math.cos(arc) * rw;
-	let y = Math.sin(arc) * rw;
+	let x = Math.cos(arc) * rA;
+	let y = Math.sin(arc) * rA;
 	listVertexA.push(new Vector3D(x, y, 0));
 };
 /** @type {Polygon3D[]} */
@@ -53,8 +53,9 @@ listFace.push(new Polygon3D([
 	listVertexA[n - 1],
 	listVertexA[0],
 ], colorA));
-let r = (rh > rw ? rh : rw);
+let r = (zA > rA ? zA : rA);
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+
 /** @type {(timeSec: number) => void} */
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

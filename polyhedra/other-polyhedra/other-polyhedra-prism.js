@@ -11,13 +11,13 @@ import {
 } from "../polyhedra.js";
 
 let vLight = new Vector3D(0, 3, 4);
-let focal = 12;
+let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let n = 5;
 
-let painter = new Painter(document.querySelector('canvas.prism'), vLight, focal);
-let z = Math.sin(Math.PI / n);
+let painter = new Painter(document.querySelector('canvas.prism'), vLight, focalLength);
+let zA = Math.sin(Math.PI / n);
 /** @type {Vector3D[]} */
 let listVertexA = [];
 /** @type {Vector3D[]} */
@@ -26,8 +26,8 @@ for (let i = 0; i < n; ++i) {
 	let arc = Math.PI * (i * 2 + 1 - n) / n;
 	let x = Math.cos(arc);
 	let y = Math.sin(arc);
-	listVertexA.push(new Vector3D(x, y, +z));
-	listVertexB.push(new Vector3D(x, y, -z));
+	listVertexA.push(new Vector3D(x, y, +zA));
+	listVertexB.push(new Vector3D(x, y, -zA));
 };
 /** @type {Polygon3D[]} */
 let listFace = [];
@@ -47,7 +47,7 @@ listFace.push(new Polygon3D([
 ], colorA));
 listFace.push(new Polygon3D(listVertexA, colorA));
 listFace.push(new Polygon3D(listVertexB, colorA));
-let r = listVertexA[0].Length();
+let r = listVertexA[0].GetLength();
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 
 let DrawFrame = function () {

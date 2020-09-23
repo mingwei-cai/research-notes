@@ -11,10 +11,10 @@ import {
 } from "../polyhedra.js";
 
 let vLight = new Vector3D(0, 3, 4);
-let focal = 12;
+let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
-let painter = new Painter(document.querySelector('canvas.Platonic-20'), vLight, focal);
+let painter = new Painter(document.querySelector('canvas.Platonic-20'), vLight, focalLength);
 
 let vertexA = new Vector3D(2 / (Math.sqrt(5) + 1), 2 / (3 + Math.sqrt(5)), 0);
 let faceA = new Polygon3D([
@@ -49,7 +49,7 @@ let listFace = [
 	faceB.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
 	faceB.Map((v) => (new Vector3D(-v.x, -v.y, -v.z))),
 ];
-let r = vertexA.Length();
+let r = vertexA.GetLength();
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
 
 /** @type {(timeSec: number) => void} */

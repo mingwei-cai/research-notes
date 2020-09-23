@@ -11,32 +11,32 @@ import {
 } from "../polyhedra.js";
 
 let vLight = new Vector3D(0, 3, 4);
-let focal = 12;
+let focalLength = 12;
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let n = 5;
 
-let painter = new Painter(document.querySelector('canvas.antibipyramid'), vLight, focal);
-let t = Math.sin(Math.PI / (n * 2)) * Math.sqrt(Math.cos(Math.PI / n) * 2 + 1);
-let z = t / (Math.cos(Math.PI / n) * 2 + 1);
-let rh = (Math.cos(Math.PI / n) + 1) / (t * 2);
-let vertexA = new Vector3D(0, 0, +rh);
-let vertexB = new Vector3D(0, 0, -rh);
+let painter = new Painter(document.querySelector('canvas.antibipyramid'), vLight, focalLength);
+let rA = Math.sqrt(Math.cos(Math.PI / n) * 2 + 1) / Math.cos(Math.PI / (n * 2));
+let zA = Math.tan(Math.PI / (n * 2));
+let zB = 1 / Math.tan(Math.PI / (n * 2));
+let vertexA = new Vector3D(0, 0, +zB);
+let vertexB = new Vector3D(0, 0, -zB);
 /** @type {Vector3D[]} */
 let listVertexA = [];
 for (let i = 0; i < n; ++i) {
 	let arc = Math.PI * (i * 2 - n) / n;
-	let x = Math.cos(arc);
-	let y = Math.sin(arc);
-	listVertexA.push(new Vector3D(x, y, -z));
+	let x = Math.cos(arc) * rA;
+	let y = Math.sin(arc) * rA;
+	listVertexA.push(new Vector3D(x, y, -zA));
 };
 /** @type {Vector3D[]} */
 let listVertexB = [];
 for (let i = 0; i < n; ++i) {
 	let arc = Math.PI * (i * 2 + 1 - n) / n;
-	let x = Math.cos(arc);
-	let y = Math.sin(arc);
-	listVertexB.push(new Vector3D(x, y, +z));
+	let x = Math.cos(arc) * rA;
+	let y = Math.sin(arc) * rA;
+	listVertexB.push(new Vector3D(x, y, +zA));
 };
 /** @type {Polygon3D[]} */
 let listFace = [];
@@ -66,9 +66,9 @@ listFace.push(new Polygon3D([
 	listVertexA[0],
 	listVertexB[0],
 ], colorA));
-let rw = listVertexA[0].Length();
-let r = (rh > rw ? rh : rw);
+let r = zB;
 let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+
 /** @type {(timeSec: number) => void} */
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

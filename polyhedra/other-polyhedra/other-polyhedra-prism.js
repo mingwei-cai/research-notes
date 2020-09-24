@@ -26,6 +26,7 @@ for (let i = 0; i < n; ++i) {
 	listVertexA.push(new Point(x, y, +zA));
 	listVertexB.push(new Point(x, y, -zA));
 };
+
 /** @type {Polygon[]} */
 let listFaceA = [];
 for (let i = 1; i < n; ++i) {
@@ -44,8 +45,8 @@ listFaceA.push(new Polygon([
 ], 0, colorA));
 listFaceA.push(new Polygon(listVertexA, 0, colorA));
 listFaceA.push(new Polygon(listVertexB, 0, colorA));
-let solidA = new Polyhedron(listFaceA);
 
+let solidA = new Polyhedron(listFaceA);
 let r = listVertexA[0].GetValue().GetLength();
 let listSolid = [
 	solidA.CreatePolyhedron((v) => v.Div(r)),

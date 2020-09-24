@@ -35,6 +35,7 @@ for (let i = 0; i < n; ++i) {
 	let y = Math.sin(arc) * rA;
 	listVertexB.push(new Point(x, y, +zA));
 };
+
 /** @type {Polygon[]} */
 let listFaceA = [];
 for (let i = 1; i < n; ++i) {
@@ -63,8 +64,8 @@ listFaceA.push(new Polygon([
 	listVertexA[0],
 	listVertexB[0],
 ], 0, colorA));
-let solidA = new Polyhedron(listFaceA);
 
+let solidA = new Polyhedron(listFaceA);
 let r = zB;
 let listSolid = [
 	solidA.CreatePolyhedron((v) => v.Div(r)),

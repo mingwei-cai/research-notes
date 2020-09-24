@@ -56,6 +56,10 @@ let Point2D = class {
 	};
 };
 
+Point2D.prototype.GetValue = function () {
+	return this;
+};
+
 let Polygon2D = class {
 	/** @type {Point2D[]} */
 	listVertex = null;
@@ -68,6 +72,10 @@ let Polygon2D = class {
 		this.order = order;
 		this.color = color || Color.transparent;
 	};
+};
+
+Polygon2D.prototype.GetValue = function () {
+	return this;
 };
 
 // ======================== 3D 座標點 ========================
@@ -138,11 +146,6 @@ VectorPoint.prototype.GetLength = function () {
 	return Math.sqrt(this.Dot(this));
 };
 
-VectorPoint.prototype.GetUint = function () {
-	let r = this.GetLength();
-	return (r > 0 ? this.Div(r) : this);
-};
-
 /** @type {(focalLength: number) => Point2D} */
 VectorPoint.prototype.GetProjection = function (focalLength) {
 	let r = focalLength / (focalLength - this.z);
@@ -156,7 +159,7 @@ VectorPoint.prototype.GetProjection = function (focalLength) {
 'JSDoc @typedef Transformation';
 
 /** @type {Transformation[]} */
-let listSymmetry = [
+VectorPoint.listSymmetry = [
 
 	(v) => new VectorPoint(+v.x, +v.y, +v.z),
 	(v) => new VectorPoint(-v.x, +v.y, +v.z),
@@ -217,22 +220,6 @@ let listSymmetry = [
 /** @typedef {{GetValue: () => VectorPoint}} VertexData */
 'JSDoc @typedef VertexData';
 
-let Point = class {
-	x = 0;
-	y = 0;
-	z = 0;
-	/** @type {(x: number, y: number, z: number)} */
-	constructor(x, y, z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	};
-};
-
-Point.prototype.GetValue = function () {
-	return new VectorPoint(this.x, this.y, this.z);
-};
-
 let PointManager = class {
 	/** @type {VertexData} */
 	data = null;
@@ -253,7 +240,27 @@ PointManager.prototype.GetValue = function () {
 PointManager.prototype.CreatePoint = function (Trans) {
 	return new PointManager(this, Trans);
 };
-Point.prototype.CreatePoint = PointManager.prototype.CreatePoint;
+
+let Point = class {
+	x = 0;
+	y = 0;
+	z = 0;
+	/** @type {(x: number, y: number, z: number)} */
+	constructor(x, y, z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	};
+};
+
+Point.prototype.GetValue = function () {
+	return new VectorPoint(this.x, this.y, this.z);
+};
+
+/** @type {(Trans: Transformation) => PointManager} */
+Point.prototype.CreatePoint = function (Trans) {
+	return new PointManager(this, Trans);
+};
 
 // ======================== 3D 多邊形 ========================
 
@@ -263,7 +270,7 @@ let VectorPolygon = class {
 	order = 0;
 	/** @type {Color} */
 	color = null;
-	/** @type {listVertex: VectorPoint[], order: number, color: Color} */
+	/** @type {(listVertex: VectorPoint[], order: number, color: Color)} */
 	constructor(listVertex, order, color = null) {
 		this.listVertex = listVertex;
 		this.order = order;
@@ -275,6 +282,7 @@ let VectorPolygon = class {
 VectorPolygon.prototype.Map = function (Trans, color = null) {
 	return new VectorPolygon(
 		Trans == null ? this.listVertex : this.listVertex.map(Trans),
+		this.order,
 		color == null ? this.color : color.Over(this.color),
 	);
 };
@@ -316,26 +324,19 @@ VectorPolygon.prototype.GetCenter = function () {
 
 /** @type {(focalLength: number, vLight: VectorPoint) => Polygon2D} */
 VectorPolygon.prototype.GetProjection = function (focalLength, vLight) {
-	let order = this.order;
 	let vCenter = this.GetCenter();
-	let d = vCenter.GetLength();
-	let cosF = vCenter.z / d;
-	if (cosF < 0) {
-		order = ~order;
-		cosF = -cosF;
-	};
+	let d = vCenter.Dot(vCenter);
+	let isBack = (focalLength * vCenter.z < d);
+	let order = (isBack ? ~this.order : this.order);
 	let color = this.color;
 	if (color.a > 0) {
-		let cosL = vCenter.Dot(vLight) / d;
-		if (order < 0) {
-			cosL = -cosL;
-		};
-		let k = (1 + cosL) / 2;
+		let cosL = vCenter.Dot(vLight) / Math.sqrt(d);
+		let k = (1 + (isBack ? -cosL : cosL)) / 2;
 		color = new Color(
 			color.r * k,
 			color.g * k,
 			color.b * k,
-			cosF > 0 ? 1 - (1 - color.a) ** (1 / cosF) : 1,
+			color.a,
 		);
 	};
 	return new Polygon2D(
@@ -345,29 +346,8 @@ VectorPolygon.prototype.GetProjection = function (focalLength, vLight) {
 	);
 };
 
-/** @typedef {{GetValue: (order: number) => VectorPolygon}} FaceData */
+/** @typedef {{GetValue: (m: WeakMap) => VectorPolygon}} FaceData */
 'JSDoc @typedef FaceData';
-
-let Polygon = class {
-	/** @type {VertexData[]} */
-	listVertex = null;
-	/** @type {Color} */
-	color = null;
-	/** @type {listVertex: VertexData[], color: Color} */
-	constructor(listVertex, color = null) {
-		this.listVertex = listVertex;
-		this.color = color;
-	};
-};
-
-/** @type {(order: number) => VectorPolygon} */
-Polygon.prototype.GetValue = function (order) {
-	return VectorPolygon(
-		this.listVertex.map((v) => v.GetValue()),
-		order,
-		this.color,
-	);
-};
 
 let PolygonManager = class {
 	/** @type {FaceData} */
@@ -384,37 +364,58 @@ let PolygonManager = class {
 	};
 };
 
-/** @type {(order: number) => VectorPolygon} */
-PolygonManager.prototype.GetValue = function (order) {
-	return this.data.GetValue(order).Map(this.Trans, this.color);
+/** @type {(m: WeakMap) => VectorPolygon} */
+PolygonManager.prototype.GetValue = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let value = this.data.GetValue(m).Map(this.Trans, this.color);
+	m.set(this, value);
+	return value;
 };
 
 /** @type {(Trans: Transformation, color: Color) => PolygonManager} */
 PolygonManager.prototype.CreatePolygon = function (Trans, color = null) {
 	return new PolygonManager(this, Trans, color);
 };
-Polygon.prototype.CreatePolygon = PolygonManager.prototype.CreatePolygon;
 
-// ======================== 3D 多面體 ========================
-
-/** @typedef {{GetValue: () => VectorPolygon[]}} SolidData */
-'JSDoc @typedef SolidData';
-
-let Polyhedron = class {
-	/** @type {FaceData[]} */
-	listFace = null;
+let Polygon = class {
+	/** @type {VertexData[]} */
+	listVertex = null;
 	order = 0;
-	/** @type {(listFace: FaceData[], order: number)} */
-	constructor(listFace, order) {
-		this.listFace = listFace;
+	/** @type {Color} */
+	color = null;
+	/** @type {(listVertex: VertexData[], order: number, color: Color)} */
+	constructor(listVertex, order, color = null) {
+		this.listVertex = listVertex;
 		this.order = order;
+		this.color = color;
 	};
 };
 
-/** @type {() => VectorPolygon[]} */
-Polyhedron.prototype.GetValue = function () {
-	return this.listFace.map((f) => f.GetValue(this.order));
+/** @type {(m: WeakMap) => VectorPolygon} */
+Polygon.prototype.GetValue = function (m) {
+	if (m.has(this)) {
+		return m.get(this);
+	};
+	let value = new VectorPolygon(
+		this.listVertex.map((vertex) => vertex.GetValue()),
+		this.order,
+		this.color,
+	);
+	m.set(this, value);
+	return value;
 };
+
+/** @type {(Trans: Transformation, color: Color) => PolygonManager} */
+Polygon.prototype.CreatePolygon = function (Trans, color = null) {
+	return new PolygonManager(this, Trans, color);
+};
+
+// ======================== 3D 多面體 ========================
+
+/** @typedef {{GetValue: (m: WeakMap) => VectorPolygon[]}} SolidData */
+'JSDoc @typedef SolidData';
 
 let PolyhedronManager = class {
 	/** @type {SolidData} */
@@ -429,4 +430,104 @@ let PolyhedronManager = class {
 		this.Trans = Trans;
 		this.color = color;
 	};
+};
+
+/** @type {(m: WeakMap) => VectorPolygon[]} */
+PolyhedronManager.prototype.GetValue = function (m) {
+	return this.data.GetValue(m).map((face) => face.Map(this.Trans, this.color));
+};
+
+/** @type {(Trans: Transformation, color: Color) => PolyhedronManager} */
+PolyhedronManager.prototype.CreatePolyhedron = function (Trans, color = null) {
+	return new PolyhedronManager(this, Trans, color);
+};
+
+let Polyhedron = class {
+	/** @type {FaceData[]} */
+	listFace = null;
+	/** @type {(listFace: FaceData[])} */
+	constructor(listFace) {
+		this.listFace = listFace;
+	};
+};
+
+/** @type {(m: WeakMap) => VectorPolygon[]} */
+Polyhedron.prototype.GetValue = function (m) {
+	return this.listFace.map((face) => face.GetValue(m));
+};
+
+/** @type {(Trans: Transformation, color: Color) => PolyhedronManager} */
+Polyhedron.prototype.CreatePolyhedron = function (Trans, color = null) {
+	return new PolyhedronManager(this, Trans, color);
+};
+
+// ======================== 實際作畫邏輯 ========================
+
+let Painter = class {
+	/** @type {HTMLCanvasElement} */
+	cvs = null;
+	/** @type {VectorPoint} */
+	vLight = null;
+	focalLength = 0;
+	ox = 0;
+	oy = 0;
+	scale = 0;
+	/** @type {(cvs: HTMLCanvasElement, vLight: VectorPoint, focalLength: number)} */
+	constructor(cvs, vLight, focalLength) {
+		this.cvs = cvs;
+		this.vLight = vLight.Div(vLight.GetLength());
+		this.focalLength = focalLength;
+		this.ox = cvs.width / 2;
+		this.oy = cvs.height / 2;
+		this.scale = (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (focalLength * focalLength)) * 0.9;
+	};
+};
+
+/** @type {(w: number, h: number, scale: number)} */
+Painter.prototype.Resize = function (w, h) {
+	this.cvs.width = w;
+	this.cvs.height = h;
+	this.ox = w / 2;
+	this.oy = h / 2;
+	this.scale = (this.ox < this.oy ? this.ox : this.oy) * (1 - 1 / (this.focalLength * this.focalLength)) * 0.9;
+};
+
+/** @type {(listSolid: SolidData[], Trans: Transformation) => Polygon2D[]} */
+Painter.prototype.ListPolygon = function (listSolid, Trans) {
+	let m = new WeakMap();
+	/** @type {VectorPolygon[]} */
+	let listFace = Array.prototype.concat.apply([], listSolid.map((solid) => solid.GetValue(m)));
+	return listFace.map((face) => face.Map(Trans).GetProjection(this.focalLength, this.vLight)).sort((a, b) => a.order - b.order);
+};
+
+/** @type {(listSolid: SolidData[], Trans: Transformation, lineWidth: number) => void} */
+Painter.prototype.Draw = function (listSolid, Trans, lineWidth = 0) {
+	let ctx = this.cvs.getContext('2d');
+	ctx.clearRect(0, 0, +this.cvs.width, +this.cvs.height);
+	if (lineWidth > 0) {
+		ctx.lineWidth = lineWidth;
+		ctx.lineJoin = 'round';
+	};
+	let listPolygon = this.ListPolygon(listSolid, Trans);
+	for (let polygon of listPolygon) {
+		ctx.beginPath();
+		for (let vertex of polygon.listVertex) {
+			ctx.lineTo(this.ox + vertex.x * this.scale, this.oy - vertex.y * this.scale);
+		};
+		ctx.closePath();
+		ctx.fillStyle = polygon.color.GetStyle();
+		ctx.fill();
+		if (lineWidth > 0) {
+			ctx.stroke();
+		};
+	};
+};
+
+export {
+	Color,
+	VectorPoint,
+	Point,
+	Polygon,
+	Polyhedron,
+	Painter,
 };

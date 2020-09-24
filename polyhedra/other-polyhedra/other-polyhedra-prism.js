@@ -1,69 +1,69 @@
 import {
 	Color,
-	Vector2D,
-	Polygon2D,
-	Vector3D,
-	Polygon3D,
-	Transformation,
-	Coloration,
-	Batch,
+	VectorPoint,
+	Point,
+	Polygon,
+	Polyhedron,
 	Painter,
 } from "../polyhedra.js";
 
-let vLight = new Vector3D(0, 3, 4);
+let vLight = new VectorPoint(0, 3, 4);
 let focalLength = 12;
+let painter = new Painter(document.querySelector('canvas.prism'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
-let n = 5;
-let painter = new Painter(document.querySelector('canvas.prism'), vLight, focalLength);
-let zA = Math.sin(Math.PI / n);
 
-/** @type {Vector3D[]} */
+let n = 5;
+let zA = Math.sin(Math.PI / n);
+/** @type {Point[]} */
 let listVertexA = [];
-/** @type {Vector3D[]} */
+/** @type {Point[]} */
 let listVertexB = [];
 for (let i = 0; i < n; ++i) {
 	let arc = Math.PI * (i * 2 + 1 - n) / n;
 	let x = Math.cos(arc);
 	let y = Math.sin(arc);
-	listVertexA.push(new Vector3D(x, y, +zA));
-	listVertexB.push(new Vector3D(x, y, -zA));
+	listVertexA.push(new Point(x, y, +zA));
+	listVertexB.push(new Point(x, y, -zA));
 };
-/** @type {Polygon3D[]} */
-let listFace = [];
+/** @type {Polygon[]} */
+let listFaceA = [];
 for (let i = 1; i < n; ++i) {
-	listFace.push(new Polygon3D([
+	listFaceA.push(new Polygon([
 		listVertexA[i - 1],
 		listVertexA[i],
 		listVertexB[i],
 		listVertexB[i - 1],
 	], 0, colorA));
 };
-listFace.push(new Polygon3D([
+listFaceA.push(new Polygon([
 	listVertexA[n - 1],
 	listVertexA[0],
 	listVertexB[0],
 	listVertexB[n - 1],
 ], 0, colorA));
-listFace.push(new Polygon3D(listVertexA, 0, colorA));
-listFace.push(new Polygon3D(listVertexB, 0, colorA));
+listFaceA.push(new Polygon(listVertexA, 0, colorA));
+listFaceA.push(new Polygon(listVertexB, 0, colorA));
+let solidA = new Polyhedron(listFaceA);
 
-let r = listVertexA[0].GetLength();
-let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+let r = listVertexA[0].GetValue().GetLength();
+let listSolid = [
+	solidA.CreatePolyhedron((v) => v.Div(r)),
+];
 
-let DrawFrame = function () {
-	let timeSec = performance.now() / 1000;
+/** @type {(timeSec: number) => void} */
+let DrawFrame = function (timeSec) {
 	let arcXY = timeSec * (Math.PI / 4);
 	let arcZY = Math.PI * (0.5 - 1 / 16);
 	let sinXY = Math.sin(arcXY);
 	let sinZY = Math.sin(arcZY);
 	let cosXY = Math.cos(arcXY);
 	let cosZY = Math.cos(arcZY);
-	painter.Draw(solid.Map((v) => (new Vector3D(
+	painter.Draw(listSolid, (v) => (new VectorPoint(
 		v.x * cosXY - v.y * sinXY,
 		(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
 		v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
-	))), lineWidth);
+	)), lineWidth);
 };
 
 export { DrawFrame };

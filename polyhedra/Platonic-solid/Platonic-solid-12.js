@@ -1,47 +1,46 @@
 import {
 	Color,
-	Vector2D,
-	Polygon2D,
-	Vector3D,
-	Polygon3D,
-	Transformation,
-	Coloration,
-	Batch,
+	VectorPoint,
+	Point,
+	Polygon,
+	Polyhedron,
 	Painter,
 } from "../polyhedra.js";
 
-let vLight = new Vector3D(0, 3, 4);
-let focal = 12;
+let vLight = new VectorPoint(0, 3, 4);
+let focalLength = 12;
+let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
-let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, focal);
-let vertexA = new Vector3D(2 / (Math.sqrt(5) + 1), (Math.sqrt(5) + 1) / 2, 0);
-let vertexB = new Vector3D(1, 1, 1);
 
-let faceA = new Polygon3D([
-	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-	vertexB.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-	vertexB.Create((v) => (new Vector3D(+v.y, +v.z, +v.x))),
-	vertexA.Create((v) => (new Vector3D(+v.y, +v.z, -v.x))),
-	vertexB.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
+let vertexA = new Point((Math.sqrt(5) + 1) / 2, 2 / (Math.sqrt(5) + 1), 0);
+let vertexB = new Point(1, 1, 1);
+let faceA = new Polygon([
+	vertexA.CreatePoint(VectorPoint.listSymmetry[0o10]),
+	vertexB.CreatePoint(VectorPoint.listSymmetry[0o00]),
+	vertexA.CreatePoint(VectorPoint.listSymmetry[0o30]),
+	vertexA.CreatePoint(VectorPoint.listSymmetry[0o34]),
+	vertexB.CreatePoint(VectorPoint.listSymmetry[0o04]),
 ], 0, colorA);
-let listFace = [
-	faceA.Map((v) => (new Vector3D(+v.x, +v.y, +v.z))),
-	faceA.Map((v) => (new Vector3D(+v.y, +v.z, +v.x))),
-	faceA.Map((v) => (new Vector3D(+v.z, +v.x, +v.y))),
-	faceA.Map((v) => (new Vector3D(+v.x, -v.y, -v.z))),
-	faceA.Map((v) => (new Vector3D(+v.y, -v.z, -v.x))),
-	faceA.Map((v) => (new Vector3D(+v.z, -v.x, -v.y))),
-	faceA.Map((v) => (new Vector3D(-v.x, +v.y, -v.z))),
-	faceA.Map((v) => (new Vector3D(-v.y, +v.z, -v.x))),
-	faceA.Map((v) => (new Vector3D(-v.z, +v.x, -v.y))),
-	faceA.Map((v) => (new Vector3D(-v.x, -v.y, +v.z))),
-	faceA.Map((v) => (new Vector3D(-v.y, -v.z, +v.x))),
-	faceA.Map((v) => (new Vector3D(-v.z, -v.x, +v.y))),
-];
+let solidA = new Polyhedron([
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o00]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o03]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o05]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o06]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o20]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o23]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o25]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o26]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o40]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o43]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o45]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o46]),
+]);
 
-let r = vertexA.GetLength();
-let solid = (new Batch(listFace)).Map((v) => (v.Div(r)));
+let r = vertexA.GetValue().GetLength();
+let listSolid = [
+	solidA.CreatePolyhedron((v) => v.Div(r)),
+];
 
 /** @type {(timeSec: number) => void} */
 let DrawFrame = function (timeSec) {
@@ -51,11 +50,11 @@ let DrawFrame = function (timeSec) {
 	let sinZY = Math.sin(arcZY);
 	let cosXY = Math.cos(arcXY);
 	let cosZY = Math.cos(arcZY);
-	painter.Draw(solid.Map((v) => (new Vector3D(
+	painter.Draw(listSolid, (v) => (new VectorPoint(
 		v.x * cosXY - v.y * sinXY,
 		(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
 		v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
-	))), lineWidth);
+	)), lineWidth);
 };
 
 export { DrawFrame };

@@ -81,8 +81,8 @@ Polygon2D.prototype.GetValue = function () {
 // ======================== 3D 座標點 ========================
 
 let VectorPoint = class {
-	x = 0;
 	y = 0;
+	z = 0;
 	z = 0;
 	/** @type {(x: number, y: number, z: number)} */
 	constructor(x, y, z) {
@@ -170,24 +170,6 @@ VectorPoint.listSymmetry = [
 	(v) => new VectorPoint(+v.x, -v.y, -v.z),
 	(v) => new VectorPoint(-v.x, -v.y, -v.z),
 
-	(v) => new VectorPoint(+v.y, +v.x, +v.z),
-	(v) => new VectorPoint(-v.y, +v.x, +v.z),
-	(v) => new VectorPoint(+v.y, -v.x, +v.z),
-	(v) => new VectorPoint(-v.y, -v.x, +v.z),
-	(v) => new VectorPoint(+v.y, +v.x, -v.z),
-	(v) => new VectorPoint(-v.y, +v.x, -v.z),
-	(v) => new VectorPoint(+v.y, -v.x, -v.z),
-	(v) => new VectorPoint(-v.y, -v.x, -v.z),
-
-	(v) => new VectorPoint(+v.z, +v.x, +v.y),
-	(v) => new VectorPoint(-v.z, +v.x, +v.y),
-	(v) => new VectorPoint(+v.z, -v.x, +v.y),
-	(v) => new VectorPoint(-v.z, -v.x, +v.y),
-	(v) => new VectorPoint(+v.z, +v.x, -v.y),
-	(v) => new VectorPoint(-v.z, +v.x, -v.y),
-	(v) => new VectorPoint(+v.z, -v.x, -v.y),
-	(v) => new VectorPoint(-v.z, -v.x, -v.y),
-
 	(v) => new VectorPoint(+v.x, +v.z, +v.y),
 	(v) => new VectorPoint(-v.x, +v.z, +v.y),
 	(v) => new VectorPoint(+v.x, -v.z, +v.y),
@@ -214,6 +196,24 @@ VectorPoint.listSymmetry = [
 	(v) => new VectorPoint(-v.z, +v.y, -v.x),
 	(v) => new VectorPoint(+v.z, -v.y, -v.x),
 	(v) => new VectorPoint(-v.z, -v.y, -v.x),
+
+	(v) => new VectorPoint(+v.z, +v.x, +v.y),
+	(v) => new VectorPoint(-v.z, +v.x, +v.y),
+	(v) => new VectorPoint(+v.z, -v.x, +v.y),
+	(v) => new VectorPoint(-v.z, -v.x, +v.y),
+	(v) => new VectorPoint(+v.z, +v.x, -v.y),
+	(v) => new VectorPoint(-v.z, +v.x, -v.y),
+	(v) => new VectorPoint(+v.z, -v.x, -v.y),
+	(v) => new VectorPoint(-v.z, -v.x, -v.y),
+
+	(v) => new VectorPoint(+v.y, +v.x, +v.z),
+	(v) => new VectorPoint(-v.y, +v.x, +v.z),
+	(v) => new VectorPoint(+v.y, -v.x, +v.z),
+	(v) => new VectorPoint(-v.y, -v.x, +v.z),
+	(v) => new VectorPoint(+v.y, +v.x, -v.z),
+	(v) => new VectorPoint(-v.y, +v.x, -v.z),
+	(v) => new VectorPoint(+v.y, -v.x, -v.z),
+	(v) => new VectorPoint(-v.y, -v.x, -v.z),
 
 ];
 
@@ -262,6 +262,17 @@ Point.prototype.CreatePoint = function (Trans) {
 	return new PointManager(this, Trans);
 };
 
+/** @type {(vertex0: VertexData, vertex1: VertexData, k: number) => Point} */
+Point.At = function (vertexA, vertexB, k) {
+	let vA = vertexA.GetValue();
+	let vB = vertexB.GetValue();
+	return new Point(
+		vA.x + (vB.x - vA.x) * k,
+		vA.y + (vB.y - vA.y) * k,
+		vA.z + (vB.z - vA.z) * k,
+	);
+};
+
 // ======================== 3D 多邊形 ========================
 
 let VectorPolygon = class {
@@ -308,17 +319,17 @@ VectorPolygon.prototype.GetCenter = function () {
 		sumZX += v.z * v.x;
 		sumXY += v.x * v.y;
 	};
-	let u0 = new VectorPoint(sumXX, sumXY, sumZX);
-	let u1 = new VectorPoint(sumXY, sumYY, sumYZ);
-	let u2 = new VectorPoint(sumZX, sumYZ, sumZZ);
-	let v0 = u1.Cross(u2);
-	let v1 = u2.Cross(u0);
-	let v2 = u0.Cross(u1);
-	let det = u0.Dot(v0);
+	let uX = new VectorPoint(sumXX, sumXY, sumZX);
+	let uY = new VectorPoint(sumXY, sumYY, sumYZ);
+	let uZ = new VectorPoint(sumZX, sumYZ, sumZZ);
+	let vX = uY.Cross(uZ);
+	let vY = uZ.Cross(uX);
+	let vZ = uX.Cross(uY);
+	let det = uX.Dot(vX);
 	if (det == 0) {
 		return new VectorPoint(0, 0, 0);
 	};
-	let vNormal = (v0.Mul(sumX)).Add(v1.Mul(sumY)).Add(v2.Mul(sumZ)).Div(det);
+	let vNormal = (vX.Mul(sumX)).Add(vY.Mul(sumY)).Add(vZ.Mul(sumZ)).Div(det);
 	return vNormal.Div(vNormal.Dot(vNormal));
 };
 

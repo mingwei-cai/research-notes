@@ -13,28 +13,28 @@ let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, 
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point((Math.sqrt(5) + 1) / 2, 2 / (Math.sqrt(5) + 1), 0);
+let vertexA = new Point(0, 2 / (Math.sqrt(5) + 1), (Math.sqrt(5) + 1) / 2);
 let vertexB = new Point(1, 1, 1);
 let faceA = new Polygon([
 	vertexA.CreatePoint(VectorPoint.listSymmetry[0o10]),
 	vertexB.CreatePoint(VectorPoint.listSymmetry[0o00]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o30]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o34]),
-	vertexB.CreatePoint(VectorPoint.listSymmetry[0o04]),
+	vertexA.CreatePoint(VectorPoint.listSymmetry[0o50]),
+	vertexA.CreatePoint(VectorPoint.listSymmetry[0o51]),
+	vertexB.CreatePoint(VectorPoint.listSymmetry[0o01]),
 ], 0, colorA);
 let solidA = new Polyhedron([
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o00]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o03]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o05]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o06]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o20]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o23]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o25]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o26]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o40]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o43]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o45]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o46]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o10]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o13]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o15]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o16]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o30]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o33]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o35]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o36]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o50]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o53]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o55]),
+	faceA.CreatePolygon(VectorPoint.listSymmetry[0o56]),
 ]);
 
 let r = vertexA.GetValue().GetLength();

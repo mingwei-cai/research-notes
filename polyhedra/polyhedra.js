@@ -164,7 +164,7 @@ Vector3D.prototype.Create = function (Trans) {
 	return Trans(this);
 };
 
-Vector3D.GetPartition = function (v0, v1, k) {
+Vector3D.GetDiversion = function (v0, v1, k) {
 	return new Vector3D(
 		v0.x + (v1.x - v0.x) * k,
 		v0.y + (v1.y - v0.y) * k,
@@ -181,13 +181,39 @@ Vector3D.GetIntersection = function (v0, v1, v2) {
 	return u0.Add(u1).Add(u2).Div(det);
 };
 
+/** @typedef {{Create: (Trans: (v: Vector3D) => Vector3D) => Vector3D}} VertexData */
+'JSDoc @typedef VertexData';
+
+let VectorCreater = class {
+	/** @type {VertexData} */
+	data = null;
+	/** @type {(v: Vector3D) => Vector3D} */
+	Trans = null;
+	/** @type {(data: VertexData, Trans: (v: Vector3D) => Vector3D)} */
+	constructor(data, Trans) {
+		this.data = data;
+		this.Trans = Trans;
+	};
+};
+
+/** @type {(Trans: (v: Vector3D) => Vector3D) => Vector3D} */
+VectorCreater.prototype.Create = function (Trans) {
+	return Trans(this.data.Create(this.Trans));
+};
+
+/** @type {(Trans: (v: Vector3D) => Vector3D) => Vector3D} */
+Vector3D.prototype.Map = function (Trans) {
+	return new VectorCreater(this, Trans);
+};
+VectorCreater.prototype.Map = Vector3D.prototype.Map;
+
 let Polygon3D = class {
-	/** @type {Vector3D[]} */
+	/** @type {VertexData[]} */
 	listVertex = null;
 	order = 0;
 	/** @type {Color} */
 	color = null;
-	/** @type {(listVertex: Vector3D[], color: Color)} */
+	/** @type {(listVertex: VertexData[], color: Color)} */
 	constructor(listVertex, order, color = null) {
 		this.listVertex = listVertex;
 		this.order = order;

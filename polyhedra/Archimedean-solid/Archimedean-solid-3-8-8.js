@@ -16,7 +16,11 @@ let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let painter = new Painter(document.querySelector('canvas.Archimedean-3-8-8'), vLight, focalLength);
 let vertex0A = new Vector3D(1, 1, 1);
-let vertexA = vertex0A.MoveTo(vertex0A.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))), 1 / (2 + Math.SQRT2));
+let vertexA = Vector3D.GetDiversion(
+	vertex0A,
+	vertex0A.Create((v) => (new Vector3D(+v.x, +v.y, -v.z))),
+	1 / (2 + Math.SQRT2),
+);
 
 let faceA = new Polygon3D([
 	vertexA.Create((v) => (new Vector3D(+v.x, +v.y, +v.z))),

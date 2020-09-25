@@ -55,7 +55,7 @@ listFaceA.push(new Polygon([
 let solidA = new Polyhedron(listFaceA);
 let r = (zA > rA ? zA : rA);
 let listSolid = [
-	solidA.CreatePolyhedron((v) => v.Div(r)),
+	solidA.Map((v) => v.Div(r)),
 ];
 
 /** @type {(timeSec: number) => void} */

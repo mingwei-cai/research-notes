@@ -15,41 +15,41 @@ let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
 let vertexA = new Point(0, 2 / (3 + Math.sqrt(5)), 2 / (Math.sqrt(5) + 1));
 let faceA = new Polygon([
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o10]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o50]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o51]),
+	vertexA.Map(VectorPoint.listSymmetry[0o30]),
+	vertexA.Map(VectorPoint.listSymmetry[0o10]),
+	vertexA.Map(VectorPoint.listSymmetry[0o11]),
 ], 0, colorA);
 let faceB = new Polygon([
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o10]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o30]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o50]),
+	vertexA.Map(VectorPoint.listSymmetry[0o10]),
+	vertexA.Map(VectorPoint.listSymmetry[0o30]),
+	vertexA.Map(VectorPoint.listSymmetry[0o50]),
 ], 0, colorA);
 let solidA = new Polyhedron([
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o00]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o03]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o05]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o06]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o20]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o23]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o25]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o26]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o40]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o43]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o45]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o46]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o00]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o01]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o02]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o03]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o04]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o05]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o06]),
-	faceB.CreatePolygon(VectorPoint.listSymmetry[0o07]),
+	faceA.Map(VectorPoint.listSymmetry[0o00]),
+	faceA.Map(VectorPoint.listSymmetry[0o03]),
+	faceA.Map(VectorPoint.listSymmetry[0o05]),
+	faceA.Map(VectorPoint.listSymmetry[0o06]),
+	faceA.Map(VectorPoint.listSymmetry[0o20]),
+	faceA.Map(VectorPoint.listSymmetry[0o23]),
+	faceA.Map(VectorPoint.listSymmetry[0o25]),
+	faceA.Map(VectorPoint.listSymmetry[0o26]),
+	faceA.Map(VectorPoint.listSymmetry[0o40]),
+	faceA.Map(VectorPoint.listSymmetry[0o43]),
+	faceA.Map(VectorPoint.listSymmetry[0o45]),
+	faceA.Map(VectorPoint.listSymmetry[0o46]),
+	faceB.Map(VectorPoint.listSymmetry[0o00]),
+	faceB.Map(VectorPoint.listSymmetry[0o01]),
+	faceB.Map(VectorPoint.listSymmetry[0o02]),
+	faceB.Map(VectorPoint.listSymmetry[0o03]),
+	faceB.Map(VectorPoint.listSymmetry[0o04]),
+	faceB.Map(VectorPoint.listSymmetry[0o05]),
+	faceB.Map(VectorPoint.listSymmetry[0o06]),
+	faceB.Map(VectorPoint.listSymmetry[0o07]),
 ]);
 
 let r = vertexA.GetValue().GetLength();
 let listSolid = [
-	solidA.CreatePolyhedron((v) => v.Div(r)),
+	solidA.Map((v) => v.Div(r)),
 ];
 
 /** @type {(timeSec: number) => void} */

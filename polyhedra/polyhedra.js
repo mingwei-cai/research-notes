@@ -170,6 +170,24 @@ VectorPoint.listSymmetry = [
 	(v) => new VectorPoint(+v.x, -v.y, -v.z),
 	(v) => new VectorPoint(-v.x, -v.y, -v.z),
 
+	(v) => new VectorPoint(+v.y, +v.x, +v.z),
+	(v) => new VectorPoint(-v.y, +v.x, +v.z),
+	(v) => new VectorPoint(+v.y, -v.x, +v.z),
+	(v) => new VectorPoint(-v.y, -v.x, +v.z),
+	(v) => new VectorPoint(+v.y, +v.x, -v.z),
+	(v) => new VectorPoint(-v.y, +v.x, -v.z),
+	(v) => new VectorPoint(+v.y, -v.x, -v.z),
+	(v) => new VectorPoint(-v.y, -v.x, -v.z),
+
+	(v) => new VectorPoint(+v.z, +v.x, +v.y),
+	(v) => new VectorPoint(-v.z, +v.x, +v.y),
+	(v) => new VectorPoint(+v.z, -v.x, +v.y),
+	(v) => new VectorPoint(-v.z, -v.x, +v.y),
+	(v) => new VectorPoint(+v.z, +v.x, -v.y),
+	(v) => new VectorPoint(-v.z, +v.x, -v.y),
+	(v) => new VectorPoint(+v.z, -v.x, -v.y),
+	(v) => new VectorPoint(-v.z, -v.x, -v.y),
+
 	(v) => new VectorPoint(+v.x, +v.z, +v.y),
 	(v) => new VectorPoint(-v.x, +v.z, +v.y),
 	(v) => new VectorPoint(+v.x, -v.z, +v.y),
@@ -197,24 +215,6 @@ VectorPoint.listSymmetry = [
 	(v) => new VectorPoint(+v.z, -v.y, -v.x),
 	(v) => new VectorPoint(-v.z, -v.y, -v.x),
 
-	(v) => new VectorPoint(+v.z, +v.x, +v.y),
-	(v) => new VectorPoint(-v.z, +v.x, +v.y),
-	(v) => new VectorPoint(+v.z, -v.x, +v.y),
-	(v) => new VectorPoint(-v.z, -v.x, +v.y),
-	(v) => new VectorPoint(+v.z, +v.x, -v.y),
-	(v) => new VectorPoint(-v.z, +v.x, -v.y),
-	(v) => new VectorPoint(+v.z, -v.x, -v.y),
-	(v) => new VectorPoint(-v.z, -v.x, -v.y),
-
-	(v) => new VectorPoint(+v.y, +v.x, +v.z),
-	(v) => new VectorPoint(-v.y, +v.x, +v.z),
-	(v) => new VectorPoint(+v.y, -v.x, +v.z),
-	(v) => new VectorPoint(-v.y, -v.x, +v.z),
-	(v) => new VectorPoint(+v.y, +v.x, -v.z),
-	(v) => new VectorPoint(-v.y, +v.x, -v.z),
-	(v) => new VectorPoint(+v.y, -v.x, -v.z),
-	(v) => new VectorPoint(-v.y, -v.x, -v.z),
-
 ];
 
 /** @typedef {{GetValue: () => VectorPoint}} VertexData */
@@ -237,7 +237,7 @@ PointManager.prototype.GetValue = function () {
 };
 
 /** @type {(Trans: Transformation) => PointManager} */
-PointManager.prototype.CreatePoint = function (Trans) {
+PointManager.prototype.Map = function (Trans) {
 	return new PointManager(this, Trans);
 };
 
@@ -258,7 +258,7 @@ Point.prototype.GetValue = function () {
 };
 
 /** @type {(Trans: Transformation) => PointManager} */
-Point.prototype.CreatePoint = function (Trans) {
+Point.prototype.Map = function (Trans) {
 	return new PointManager(this, Trans);
 };
 
@@ -386,7 +386,7 @@ PolygonManager.prototype.GetValue = function (m) {
 };
 
 /** @type {(Trans: Transformation, color: Color) => PolygonManager} */
-PolygonManager.prototype.CreatePolygon = function (Trans, color = null) {
+PolygonManager.prototype.Map = function (Trans, color = null) {
 	return new PolygonManager(this, Trans, color);
 };
 
@@ -419,7 +419,7 @@ Polygon.prototype.GetValue = function (m) {
 };
 
 /** @type {(Trans: Transformation, color: Color) => PolygonManager} */
-Polygon.prototype.CreatePolygon = function (Trans, color = null) {
+Polygon.prototype.Map = function (Trans, color = null) {
 	return new PolygonManager(this, Trans, color);
 };
 
@@ -449,7 +449,7 @@ PolyhedronManager.prototype.GetValue = function (m) {
 };
 
 /** @type {(Trans: Transformation, color: Color) => PolyhedronManager} */
-PolyhedronManager.prototype.CreatePolyhedron = function (Trans, color = null) {
+PolyhedronManager.prototype.Map = function (Trans, color = null) {
 	return new PolyhedronManager(this, Trans, color);
 };
 
@@ -468,7 +468,7 @@ Polyhedron.prototype.GetValue = function (m) {
 };
 
 /** @type {(Trans: Transformation, color: Color) => PolyhedronManager} */
-Polyhedron.prototype.CreatePolyhedron = function (Trans, color = null) {
+Polyhedron.prototype.Map = function (Trans, color = null) {
 	return new PolyhedronManager(this, Trans, color);
 };
 

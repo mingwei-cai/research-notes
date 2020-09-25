@@ -49,7 +49,7 @@ listFaceA.push(new Polygon(listVertexB, 0, colorA));
 let solidA = new Polyhedron(listFaceA);
 let r = listVertexA[0].GetValue().GetLength();
 let listSolid = [
-	solidA.CreatePolyhedron((v) => v.Div(r)),
+	solidA.Map((v) => v.Div(r)),
 ];
 
 /** @type {(timeSec: number) => void} */

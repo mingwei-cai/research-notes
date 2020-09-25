@@ -16,30 +16,30 @@ let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let vertexA = new Point(0, 2 / (Math.sqrt(5) + 1), (Math.sqrt(5) + 1) / 2);
 let vertexB = new Point(1, 1, 1);
 let faceA = new Polygon([
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o10]),
-	vertexB.CreatePoint(VectorPoint.listSymmetry[0o00]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o50]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o51]),
-	vertexB.CreatePoint(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o30]),
+	vertexB.Map(VectorPoint.listSymmetry[0o00]),
+	vertexA.Map(VectorPoint.listSymmetry[0o10]),
+	vertexA.Map(VectorPoint.listSymmetry[0o11]),
+	vertexB.Map(VectorPoint.listSymmetry[0o01]),
 ], 0, colorA);
 let solidA = new Polyhedron([
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o10]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o13]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o15]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o16]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o30]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o33]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o35]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o36]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o50]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o53]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o55]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o56]),
+	faceA.Map(VectorPoint.listSymmetry[0o10]),
+	faceA.Map(VectorPoint.listSymmetry[0o13]),
+	faceA.Map(VectorPoint.listSymmetry[0o15]),
+	faceA.Map(VectorPoint.listSymmetry[0o16]),
+	faceA.Map(VectorPoint.listSymmetry[0o30]),
+	faceA.Map(VectorPoint.listSymmetry[0o33]),
+	faceA.Map(VectorPoint.listSymmetry[0o35]),
+	faceA.Map(VectorPoint.listSymmetry[0o36]),
+	faceA.Map(VectorPoint.listSymmetry[0o50]),
+	faceA.Map(VectorPoint.listSymmetry[0o53]),
+	faceA.Map(VectorPoint.listSymmetry[0o55]),
+	faceA.Map(VectorPoint.listSymmetry[0o56]),
 ]);
 
 let r = vertexA.GetValue().GetLength();
 let listSolid = [
-	solidA.CreatePolyhedron((v) => v.Div(r)),
+	solidA.Map((v) => v.Div(r)),
 ];
 
 /** @type {(timeSec: number) => void} */

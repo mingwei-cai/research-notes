@@ -15,20 +15,20 @@ let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
 let vertexA = new Point(1, 1, 1);
 let faceA = new Polygon([
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o01]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o02]),
-	vertexA.CreatePoint(VectorPoint.listSymmetry[0o04]),
+	vertexA.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o02]),
+	vertexA.Map(VectorPoint.listSymmetry[0o04]),
 ], 0, colorA);
 let solidA = new Polyhedron([
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o00]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o03]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o05]),
-	faceA.CreatePolygon(VectorPoint.listSymmetry[0o06]),
+	faceA.Map(VectorPoint.listSymmetry[0o00]),
+	faceA.Map(VectorPoint.listSymmetry[0o03]),
+	faceA.Map(VectorPoint.listSymmetry[0o05]),
+	faceA.Map(VectorPoint.listSymmetry[0o06]),
 ]);
 
 let r = vertexA.GetValue().GetLength();
 let listSolid = [
-	solidA.CreatePolyhedron((v) => v.Div(r)),
+	solidA.Map((v) => v.Div(r)),
 ];
 
 /** @type {(timeSec: number) => void} */

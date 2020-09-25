@@ -1,5 +1,5 @@
 import { DrawFrame as DrawFrame_3_6_6 } from "./Archimedean-solid-3-6-6.js";
-// import { DrawFrame as DrawFrame_3_8_8 } from "./Archimedean-solid-3-8-8.js";
+import { DrawFrame as DrawFrame_3_8_8 } from "./Archimedean-solid-3-8-8.js";
 // import { DrawFrame as DrawFrame_3_A_A } from "./Archimedean-solid-3-A-A.js";
 // import { DrawFrame as DrawFrame_3_4_3_4 } from "./Archimedean-solid-3-4-3-4.js";
 // import { DrawFrame as DrawFrame_3_5_3_5 } from "./Archimedean-solid-3-5-3-5.js";
@@ -14,7 +14,7 @@ import { DrawFrame as DrawFrame_3_6_6 } from "./Archimedean-solid-3-6-6.js";
 
 let listDrawFrame = [
 	DrawFrame_3_6_6,
-	// DrawFrame_3_8_8,
+	DrawFrame_3_8_8,
 	// DrawFrame_3_A_A,
 	// DrawFrame_3_4_3_4,
 	// DrawFrame_3_5_3_5,

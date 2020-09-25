@@ -31,9 +31,9 @@ let faceB = new Polygon([
 ], 0, colorA);
 let faceC = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o20]),
-	vertexA.Map(VectorPoint.listSymmetry[0o21]),
-	vertexA.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o50]),
+	vertexA.Map(VectorPoint.listSymmetry[0o52]),
+	vertexA.Map(VectorPoint.listSymmetry[0o02]),
 ], 0, colorA);
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),

@@ -357,7 +357,7 @@ VectorPolygon.prototype.GetProjection = function (focalLength, vLight) {
 	);
 };
 
-/** @typedef {{GetValue: (m: WeakMap) => VectorPolygon}} FaceData */
+/** @typedef {{GetValue: (m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon}} FaceData */
 'JSDoc @typedef FaceData';
 
 let PolygonManager = class {
@@ -375,14 +375,9 @@ let PolygonManager = class {
 	};
 };
 
-/** @type {(m: WeakMap) => VectorPolygon} */
+/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon} */
 PolygonManager.prototype.GetValue = function (m) {
-	if (m.has(this)) {
-		return m.get(this);
-	};
-	let value = this.data.GetValue(m).Map(this.Trans, this.color);
-	m.set(this, value);
-	return value;
+	return this.data.GetValue(m).Map(this.Trans, this.color);
 };
 
 /** @type {(Trans: Transformation, color: Color) => PolygonManager} */
@@ -404,7 +399,7 @@ let Polygon = class {
 	};
 };
 
-/** @type {(m: WeakMap) => VectorPolygon} */
+/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon} */
 Polygon.prototype.GetValue = function (m) {
 	if (m.has(this)) {
 		return m.get(this);
@@ -425,7 +420,7 @@ Polygon.prototype.Map = function (Trans, color = null) {
 
 // ======================== 3D 多面體 ========================
 
-/** @typedef {{GetValue: (m: WeakMap) => VectorPolygon[]}} SolidData */
+/** @typedef {{GetValue: (m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon[]}} SolidData */
 'JSDoc @typedef SolidData';
 
 let PolyhedronManager = class {
@@ -443,7 +438,7 @@ let PolyhedronManager = class {
 	};
 };
 
-/** @type {(m: WeakMap) => VectorPolygon[]} */
+/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon[]} */
 PolyhedronManager.prototype.GetValue = function (m) {
 	return this.data.GetValue(m).map((face) => face.Map(this.Trans, this.color));
 };
@@ -462,7 +457,7 @@ let Polyhedron = class {
 	};
 };
 
-/** @type {(m: WeakMap) => VectorPolygon[]} */
+/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon[]} */
 Polyhedron.prototype.GetValue = function (m) {
 	return this.listFace.map((face) => face.GetValue(m));
 };

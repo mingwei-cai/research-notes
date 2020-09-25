@@ -14,7 +14,7 @@ let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
 let vertexA = Point.At(
-	new Point(0, Math.SQRT1_2, Math.SQRT1_2),
+	new Point(Math.SQRT1_2, 0, Math.SQRT1_2),
 	new Point(0, 0, Math.SQRT2),
 	1 / 3,
 );
@@ -22,9 +22,9 @@ let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o10]),
 	vertexA.Map(VectorPoint.listSymmetry[0o20]),
-	vertexA.Map(VectorPoint.listSymmetry[0o50]),
-	vertexA.Map(VectorPoint.listSymmetry[0o40]),
 	vertexA.Map(VectorPoint.listSymmetry[0o30]),
+	vertexA.Map(VectorPoint.listSymmetry[0o40]),
+	vertexA.Map(VectorPoint.listSymmetry[0o50]),
 ], 0, colorA);
 let faceB = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),

@@ -19,12 +19,12 @@ let vertexA = Point.At(
 	1 / 3,
 );
 let faceA = new Polygon([
-	vertexA.Map(VectorPoint.listSymmetry[0o01]),
 	vertexA.Map(VectorPoint.listSymmetry[0o02]),
-	vertexA.Map(VectorPoint.listSymmetry[0o22]),
+	vertexA.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o21]),
 	vertexA.Map(VectorPoint.listSymmetry[0o24]),
 	vertexA.Map(VectorPoint.listSymmetry[0o44]),
-	vertexA.Map(VectorPoint.listSymmetry[0o41]),
+	vertexA.Map(VectorPoint.listSymmetry[0o42]),
 ], 0, colorA);
 let faceB = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),

@@ -16,17 +16,17 @@ let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let vertexA = new Point(Math.SQRT1_2, Math.SQRT1_2, Math.SQRT1_2);
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o11]),
 	vertexA.Map(VectorPoint.listSymmetry[0o03]),
-	vertexA.Map(VectorPoint.listSymmetry[0o02]),
+	vertexA.Map(VectorPoint.listSymmetry[0o12]),
 ], 0, colorA);
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o20]),
 	faceA.Map(VectorPoint.listSymmetry[0o40]),
-	faceA.Map(VectorPoint.listSymmetry[0o07]),
-	faceA.Map(VectorPoint.listSymmetry[0o27]),
-	faceA.Map(VectorPoint.listSymmetry[0o47]),
+	faceA.Map(VectorPoint.listSymmetry[0o17]),
+	faceA.Map(VectorPoint.listSymmetry[0o57]),
+	faceA.Map(VectorPoint.listSymmetry[0o37]),
 ]);
 
 let r = vertexA.GetValue().GetLength();

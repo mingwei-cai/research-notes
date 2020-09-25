@@ -31,17 +31,17 @@ let faceB = new Polygon([
 ], 0, colorA);
 let faceC = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
+	vertexA.Map(VectorPoint.listSymmetry[0o20]),
+	vertexA.Map(VectorPoint.listSymmetry[0o21]),
 	vertexA.Map(VectorPoint.listSymmetry[0o01]),
-	vertexA.Map(VectorPoint.listSymmetry[0o31]),
-	vertexA.Map(VectorPoint.listSymmetry[0o30]),
 ], 0, colorA);
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o20]),
 	faceA.Map(VectorPoint.listSymmetry[0o40]),
-	faceA.Map(VectorPoint.listSymmetry[0o07]),
-	faceA.Map(VectorPoint.listSymmetry[0o27]),
-	faceA.Map(VectorPoint.listSymmetry[0o47]),
+	faceA.Map(VectorPoint.listSymmetry[0o17]),
+	faceA.Map(VectorPoint.listSymmetry[0o37]),
+	faceA.Map(VectorPoint.listSymmetry[0o57]),
 
 	faceB.Map(VectorPoint.listSymmetry[0o00]),
 	faceB.Map(VectorPoint.listSymmetry[0o01]),

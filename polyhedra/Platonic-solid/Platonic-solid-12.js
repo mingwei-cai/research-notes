@@ -13,28 +13,28 @@ let painter = new Painter(document.querySelector('canvas.Platonic-12'), vLight, 
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point(0, 2 / (3 + Math.sqrt(5)), 1);
+let vertexA = new Point(2 / (3 + Math.sqrt(5)), 0, 1);
 let vertexB = new Point(2 / (Math.sqrt(5) + 1), 2 / (Math.sqrt(5) + 1), 2 / (Math.sqrt(5) + 1));
 let faceA = new Polygon([
-	vertexA.Map(VectorPoint.listSymmetry[0o30]),
+	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexB.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o10]),
-	vertexA.Map(VectorPoint.listSymmetry[0o11]),
+	vertexA.Map(VectorPoint.listSymmetry[0o20]),
 	vertexB.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o01]),
 ], 0, colorA);
 let solidA = new Polyhedron([
-	faceA.Map(VectorPoint.listSymmetry[0o10]),
-	faceA.Map(VectorPoint.listSymmetry[0o13]),
-	faceA.Map(VectorPoint.listSymmetry[0o15]),
-	faceA.Map(VectorPoint.listSymmetry[0o16]),
-	faceA.Map(VectorPoint.listSymmetry[0o30]),
-	faceA.Map(VectorPoint.listSymmetry[0o33]),
-	faceA.Map(VectorPoint.listSymmetry[0o35]),
-	faceA.Map(VectorPoint.listSymmetry[0o36]),
-	faceA.Map(VectorPoint.listSymmetry[0o50]),
-	faceA.Map(VectorPoint.listSymmetry[0o53]),
-	faceA.Map(VectorPoint.listSymmetry[0o55]),
-	faceA.Map(VectorPoint.listSymmetry[0o56]),
+	faceA.Map(VectorPoint.listSymmetry[0o00]),
+	faceA.Map(VectorPoint.listSymmetry[0o03]),
+	faceA.Map(VectorPoint.listSymmetry[0o05]),
+	faceA.Map(VectorPoint.listSymmetry[0o06]),
+	faceA.Map(VectorPoint.listSymmetry[0o20]),
+	faceA.Map(VectorPoint.listSymmetry[0o23]),
+	faceA.Map(VectorPoint.listSymmetry[0o25]),
+	faceA.Map(VectorPoint.listSymmetry[0o26]),
+	faceA.Map(VectorPoint.listSymmetry[0o40]),
+	faceA.Map(VectorPoint.listSymmetry[0o43]),
+	faceA.Map(VectorPoint.listSymmetry[0o45]),
+	faceA.Map(VectorPoint.listSymmetry[0o46]),
 ]);
 
 let r = vertexA.GetValue().GetLength();

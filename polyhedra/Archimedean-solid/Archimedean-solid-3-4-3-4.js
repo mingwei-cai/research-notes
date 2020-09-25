@@ -13,7 +13,7 @@ let painter = new Painter(document.querySelector('canvas.Archimedean-3-4-3-4'), 
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point(0, Math.SQRT1_2, Math.SQRT1_2);
+let vertexA = new Point(Math.SQRT1_2, 0, Math.SQRT1_2);
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o11]),
@@ -29,9 +29,9 @@ let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o20]),
 	faceA.Map(VectorPoint.listSymmetry[0o40]),
-	faceA.Map(VectorPoint.listSymmetry[0o07]),
-	faceA.Map(VectorPoint.listSymmetry[0o27]),
-	faceA.Map(VectorPoint.listSymmetry[0o47]),
+	faceA.Map(VectorPoint.listSymmetry[0o17]),
+	faceA.Map(VectorPoint.listSymmetry[0o37]),
+	faceA.Map(VectorPoint.listSymmetry[0o57]),
 
 	faceB.Map(VectorPoint.listSymmetry[0o00]),
 	faceB.Map(VectorPoint.listSymmetry[0o01]),

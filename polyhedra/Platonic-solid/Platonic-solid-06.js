@@ -13,12 +13,12 @@ let painter = new Painter(document.querySelector('canvas.Platonic-06'), vLight, 
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point(1, 1, 1);
+let vertexA = new Point(Math.SQRT1_2, Math.SQRT1_2, Math.SQRT1_2);
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
+	vertexA.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o03]),
 	vertexA.Map(VectorPoint.listSymmetry[0o02]),
-	vertexA.Map(VectorPoint.listSymmetry[0o06]),
-	vertexA.Map(VectorPoint.listSymmetry[0o04]),
 ], 0, colorA);
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),

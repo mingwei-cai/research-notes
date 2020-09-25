@@ -13,33 +13,37 @@ let painter = new Painter(document.querySelector('canvas.Archimedean-3-6-6'), vL
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point(1, 1, 1);
-let vertexB = Point.At(vertexA, vertexA.Map(VectorPoint.listSymmetry[0o03]), 1 / 3);
+let vertexA = Point.At(
+	new Point(0, 0, 1),
+	new Point(1, 1, 1),
+	1 / 3,
+);
 let faceA = new Polygon([
-	vertexB.Map(VectorPoint.listSymmetry[0o01]),
-	vertexB.Map(VectorPoint.listSymmetry[0o02]),
-	vertexB.Map(VectorPoint.listSymmetry[0o22]),
-	vertexB.Map(VectorPoint.listSymmetry[0o24]),
-	vertexB.Map(VectorPoint.listSymmetry[0o44]),
-	vertexB.Map(VectorPoint.listSymmetry[0o41]),
+	vertexA.Map(VectorPoint.listSymmetry[0o01]),
+	vertexA.Map(VectorPoint.listSymmetry[0o02]),
+	vertexA.Map(VectorPoint.listSymmetry[0o22]),
+	vertexA.Map(VectorPoint.listSymmetry[0o24]),
+	vertexA.Map(VectorPoint.listSymmetry[0o44]),
+	vertexA.Map(VectorPoint.listSymmetry[0o41]),
 ], 0, colorA);
 let faceB = new Polygon([
-	vertexB.Map(VectorPoint.listSymmetry[0o00]),
-	vertexB.Map(VectorPoint.listSymmetry[0o20]),
-	vertexB.Map(VectorPoint.listSymmetry[0o40]),
+	vertexA.Map(VectorPoint.listSymmetry[0o00]),
+	vertexA.Map(VectorPoint.listSymmetry[0o20]),
+	vertexA.Map(VectorPoint.listSymmetry[0o40]),
 ], 0, colorA);
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o03]),
 	faceA.Map(VectorPoint.listSymmetry[0o05]),
 	faceA.Map(VectorPoint.listSymmetry[0o06]),
+
 	faceB.Map(VectorPoint.listSymmetry[0o01]),
 	faceB.Map(VectorPoint.listSymmetry[0o02]),
 	faceB.Map(VectorPoint.listSymmetry[0o04]),
 	faceB.Map(VectorPoint.listSymmetry[0o07]),
 ]);
 
-let r = faceA.listVertex[0].GetValue().GetLength();
+let r = vertexA.GetValue().GetLength();
 let listSolid = [
 	solidA.Map((v) => v.Div(r)),
 ];

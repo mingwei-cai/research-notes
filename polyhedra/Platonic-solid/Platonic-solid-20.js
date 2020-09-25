@@ -13,7 +13,7 @@ let painter = new Painter(document.querySelector('canvas.Platonic-20'), vLight, 
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point(0, 2 / (3 + Math.sqrt(5)), 2 / (Math.sqrt(5) + 1));
+let vertexA = new Point(0, 2 / (Math.sqrt(5) + 1), 1);
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o30]),
 	vertexA.Map(VectorPoint.listSymmetry[0o10]),
@@ -37,6 +37,7 @@ let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o43]),
 	faceA.Map(VectorPoint.listSymmetry[0o45]),
 	faceA.Map(VectorPoint.listSymmetry[0o46]),
+
 	faceB.Map(VectorPoint.listSymmetry[0o00]),
 	faceB.Map(VectorPoint.listSymmetry[0o01]),
 	faceB.Map(VectorPoint.listSymmetry[0o02]),

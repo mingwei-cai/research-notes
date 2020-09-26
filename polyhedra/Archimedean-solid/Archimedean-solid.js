@@ -21,7 +21,7 @@ let listDrawFrame = [
 	// DrawFrame_4_6_6,
 	// DrawFrame_5_6_6,
 	// DrawFrame_4_6_8,
-	DrawFrame_4_6_A,
+	// DrawFrame_4_6_A,
 	// DrawFrame_3_4_4_4,
 	// DrawFrame_3_4_5_4,
 	// DrawFrame_3_3_3_3_4,

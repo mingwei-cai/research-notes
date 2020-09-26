@@ -49,24 +49,21 @@ let solidA = new Polyhedron([
 	faceB.Map(VectorPoint.listSymmetry[0o27]),
 	faceB.Map(VectorPoint.listSymmetry[0o47]),
 ]);
-
-let r = vertexA.GetValue().GetLength();
-let listSolid = [
-	solidA.Map((v) => v.Div(r)),
-];
+let listSolid = [solidA];
 
 /** @type {(timeSec: number) => void} */
 let DrawFrame = function (timeSec) {
 	let arcXY = timeSec * (Math.PI / 4);
-	let arcZY = Math.PI * (0.5 - 1 / 16);
 	let sinXY = Math.sin(arcXY);
-	let sinZY = Math.sin(arcZY);
 	let cosXY = Math.cos(arcXY);
+	let arcZY = Math.PI * (0.5 - 1 / 16);
+	let sinZY = Math.sin(arcZY);
 	let cosZY = Math.cos(arcZY);
+	let r = vertexA.GetValue().GetLength();
 	painter.Draw(listSolid, (v) => (new VectorPoint(
-		v.x * cosXY - v.y * sinXY,
-		(v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY,
-		v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY,
+		(v.x * cosXY - v.y * sinXY) / r,
+		((v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY) / r,
+		(v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY) / r,
 	)), lineWidth);
 };
 

@@ -61,10 +61,8 @@ listFaceA.push(new Polygon(listVertexA, 0, colorA));
 listFaceA.push(new Polygon(listVertexB, 0, colorA));
 
 let solidA = new Polyhedron(listFaceA);
+let listSolid = [solidA];
 let r = listVertexA[0].GetValue().GetLength();
-let listSolid = [
-	solidA.Map((v) => v.Div(r)),
-];
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

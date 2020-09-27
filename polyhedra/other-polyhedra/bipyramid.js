@@ -53,10 +53,8 @@ listFaceA.push(new Polygon([
 ], 0, colorA));
 
 let solidA = new Polyhedron(listFaceA);
+let listSolid = [solidA];
 let r = (zA > rA ? zA : rA);
-let listSolid = [
-	solidA.Map((v) => v.Div(r)),
-];
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

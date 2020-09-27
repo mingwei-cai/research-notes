@@ -13,7 +13,8 @@ let painter = new Painter(document.querySelector('canvas.Platonic-20'), vLight, 
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
-let vertexA = new Point(0, 2 / (Math.sqrt(5) + 1), 1);
+let kA = 2 / (Math.sqrt(5) + 1);
+let vertexA = new Point(0, kA, 1);
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o40]),

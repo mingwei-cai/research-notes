@@ -12,12 +12,16 @@ let focalLength = 12;
 let painter = new Painter(document.querySelector('canvas.Archimedean-3-8-8'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
+let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
+let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 
+let kA = Math.SQRT1_2;
 let vertexA = Point.At(
-	new Point(Math.SQRT1_2, 0, Math.SQRT1_2),
-	new Point(Math.SQRT1_2, Math.SQRT1_2, Math.SQRT1_2),
-	1 / (Math.SQRT2 + 1),
+	new Point(kA, 0, kA),
+	new Point(kA, kA, kA),
+	1 / (kA * 2 + 1),
 );
+
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o10]),
@@ -32,7 +36,8 @@ let faceB = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o20]),
 	vertexA.Map(VectorPoint.listSymmetry[0o40]),
-], 0, colorA);
+], 0, colorB);
+
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o20]),
@@ -50,6 +55,7 @@ let solidA = new Polyhedron([
 	faceB.Map(VectorPoint.listSymmetry[0o06]),
 	faceB.Map(VectorPoint.listSymmetry[0o07]),
 ]);
+
 let listSolid = [solidA];
 
 /** @type {(timeSec: number) => void} */

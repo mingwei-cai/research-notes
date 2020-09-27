@@ -12,41 +12,43 @@ let focalLength = 12;
 let painter = new Painter(document.querySelector('canvas.Archimedean-3-3-3-3-4'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
+let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
+let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 
-/** @type {(f: (x: number), a: number, b: number) => number} */
-let Solve = function (f, a, b) {
-	a = +a;
-	b = +b;
-	let fa = f(a);
+/** @type {(f: (x: number), xA: number, xB: number) => number} */
+let Solve = function (f, xA, xB) {
+	xA = +xA;
+	xB = +xB;
+	let yA = f(xA);
 	do {
-		let fb = f(b);
-		let c = (fa * b - fb * a) / (fa - fb);
-		a = b;
-		b = c;
-		fa = fb;
-	} while (Number.isFinite(b));
-	return a;
+		let yB = f(xB);
+		let xC = (yA * xB - yB * xA) / (yA - yB);
+		xA = xB;
+		xB = xC;
+		yA = yB;
+	} while (Number.isFinite(xB));
+	return xA;
 };
-
 let kA = Solve((x) => (((x + 1) * x + 1) * x - 1), 2, 1);
-
 let vertexA = new Point(kA, kA * kA, 1);
+
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o11]),
-	vertexA.Map(VectorPoint.listSymmetry[0o03]),
 	vertexA.Map(VectorPoint.listSymmetry[0o12]),
+	vertexA.Map(VectorPoint.listSymmetry[0o03]),
+	vertexA.Map(VectorPoint.listSymmetry[0o11]),
 ], 0, colorA);
 let faceB = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o20]),
 	vertexA.Map(VectorPoint.listSymmetry[0o40]),
-], 0, colorA);
+], 0, colorB);
 let faceC = new Polygon([
-	vertexA.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o20]),
 	vertexA.Map(VectorPoint.listSymmetry[0o11]),
-], 0, colorA);
+	vertexA.Map(VectorPoint.listSymmetry[0o20]),
+	vertexA.Map(VectorPoint.listSymmetry[0o00]),
+], 0, colorC);
+
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o20]),
@@ -89,6 +91,7 @@ let solidA = new Polyhedron([
 	faceC.Map(VectorPoint.listSymmetry[0o54]),
 	faceC.Map(VectorPoint.listSymmetry[0o57]),
 ]);
+
 let listSolid = [solidA];
 
 /** @type {(timeSec: number) => void} */

@@ -12,9 +12,13 @@ let focalLength = 12;
 let painter = new Painter(document.querySelector('canvas.Archimedean-3-5-3-5'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
+let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
+let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 
+let kA = 2 / (Math.sqrt(5) + 1);
 let vertexA = new Point(0, 0, 1);
-let vertexB = new Point(1 / 2, 1 / (Math.sqrt(5) + 1), (Math.sqrt(5) + 1) / 4);
+let vertexB = new Point(1 / 2, kA / 2, (kA + 1) / 2);
+
 let faceA = new Polygon([
 	vertexB.Map(VectorPoint.listSymmetry[0o20]),
 	vertexB.Map(VectorPoint.listSymmetry[0o00]),
@@ -24,14 +28,15 @@ let faceA = new Polygon([
 ], 0, colorA);
 let faceB = new Polygon([
 	vertexB.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o00]),
-	vertexB.Map(VectorPoint.listSymmetry[0o02]),
-], 0, colorA);
-let faceC = new Polygon([
-	vertexB.Map(VectorPoint.listSymmetry[0o00]),
 	vertexB.Map(VectorPoint.listSymmetry[0o20]),
 	vertexB.Map(VectorPoint.listSymmetry[0o40]),
-], 0, colorA);
+], 0, colorB);
+let faceC = new Polygon([
+	vertexB.Map(VectorPoint.listSymmetry[0o00]),
+	vertexA.Map(VectorPoint.listSymmetry[0o00]),
+	vertexB.Map(VectorPoint.listSymmetry[0o02]),
+], 0, colorB);
+
 let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o00]),
 	faceA.Map(VectorPoint.listSymmetry[0o03]),
@@ -47,27 +52,28 @@ let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o46]),
 
 	faceB.Map(VectorPoint.listSymmetry[0o00]),
+	faceB.Map(VectorPoint.listSymmetry[0o01]),
+	faceB.Map(VectorPoint.listSymmetry[0o02]),
 	faceB.Map(VectorPoint.listSymmetry[0o03]),
+	faceB.Map(VectorPoint.listSymmetry[0o04]),
 	faceB.Map(VectorPoint.listSymmetry[0o05]),
 	faceB.Map(VectorPoint.listSymmetry[0o06]),
-	faceB.Map(VectorPoint.listSymmetry[0o20]),
-	faceB.Map(VectorPoint.listSymmetry[0o23]),
-	faceB.Map(VectorPoint.listSymmetry[0o25]),
-	faceB.Map(VectorPoint.listSymmetry[0o26]),
-	faceB.Map(VectorPoint.listSymmetry[0o40]),
-	faceB.Map(VectorPoint.listSymmetry[0o43]),
-	faceB.Map(VectorPoint.listSymmetry[0o45]),
-	faceB.Map(VectorPoint.listSymmetry[0o46]),
+	faceB.Map(VectorPoint.listSymmetry[0o07]),
 
 	faceC.Map(VectorPoint.listSymmetry[0o00]),
-	faceC.Map(VectorPoint.listSymmetry[0o01]),
-	faceC.Map(VectorPoint.listSymmetry[0o02]),
 	faceC.Map(VectorPoint.listSymmetry[0o03]),
-	faceC.Map(VectorPoint.listSymmetry[0o04]),
 	faceC.Map(VectorPoint.listSymmetry[0o05]),
 	faceC.Map(VectorPoint.listSymmetry[0o06]),
-	faceC.Map(VectorPoint.listSymmetry[0o07]),
+	faceC.Map(VectorPoint.listSymmetry[0o20]),
+	faceC.Map(VectorPoint.listSymmetry[0o23]),
+	faceC.Map(VectorPoint.listSymmetry[0o25]),
+	faceC.Map(VectorPoint.listSymmetry[0o26]),
+	faceC.Map(VectorPoint.listSymmetry[0o40]),
+	faceC.Map(VectorPoint.listSymmetry[0o43]),
+	faceC.Map(VectorPoint.listSymmetry[0o45]),
+	faceC.Map(VectorPoint.listSymmetry[0o46]),
 ]);
+
 let listSolid = [solidA];
 
 /** @type {(timeSec: number) => void} */

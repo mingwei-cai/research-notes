@@ -9,7 +9,7 @@ import {
 
 let vLight = new VectorPoint(0, 3, 4);
 let focalLength = 12;
-let painter = new Painter(document.querySelector('canvas.Archimedean-3-3-3-3-5'), vLight, focalLength);
+let painter = new Painter(document.querySelector('canvas.Archimedean-3-3-3-3-5-to-3-4-5-4'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
@@ -33,27 +33,42 @@ let kA = 2 / (Math.sqrt(5) + 1);
 let kB = Solve((x) => ((x * x - 2) * x - (kA + 1)), 3, 2);
 let kC = kB - 1 / kB;
 let kD = 1 + (kA + 1) * (kB + 1 + 1 / kB);
-let vertexA = new Point(1 / kD, kC / kD, 1);
-let vertexB = new Point(
+let vertexA0 = new Point(1 / kD, kC / kD, 1);
+let vertexB0 = new Point(
 	(+ kC * (kA + 1) - kD + kA) / (kD * 2),
 	(+ kC + kD * kA - (kA + 1)) / (kD * 2),
 	(+ kC * kA + kD * (kA + 1) + 1) / (kD * 2),
 );
-let vertexC = new Point(
+let vertexC0 = new Point(
 	(+ kC - kD * kA - (kA + 1)) / (kD * 2),
 	(- kC * kA + kD * (kA + 1) - 1) / (kD * 2),
 	(+ kC * (kA + 1) + kD + kA) / (kD * 2),
 );
-let vertexD = new Point(
+let vertexD0 = new Point(
 	(- kC + kD * kA - (kA + 1)) / (kD * 2),
 	(- kC * kA + kD * (kA + 1) + 1) / (kD * 2),
 	(+ kC * (kA + 1) + kD - kA) / (kD * 2),
 );
-let vertexE = new Point(
+let vertexE0 = new Point(
 	(- kC * (kA + 1) + kD + kA) / (kD * 2),
 	(+ kC + kD * kA + (kA + 1)) / (kD * 2),
 	(+ kC * kA + kD * (kA + 1) - 1) / (kD * 2),
 );
+let vertexA1 = new VectorPoint(+1 / (kA * 2 + 3), 1 / (kA * 2 + 3), 1);
+let vertexB1 = new VectorPoint(-1 / (kA * 2 + 3), 1 / (kA * 2 + 3), 1);
+let vertexC1 = new VectorPoint(-1 / (kA + 2), kA, 2 / (kA + 2));
+let vertexD1 = new VectorPoint(0, (kA * 2 + 1) / (kA + 2), kA);
+let vertexE1 = new VectorPoint(+1 / (kA + 2), kA, 2 / (kA + 2));
+let p = 0;
+let vertexA = vertexA0.Map((v) => v.Add(vertexA1.Sub(v).Mul(p)));
+let vertexB = vertexB0.Map((v) => v.Add(vertexB1.Sub(v).Mul(p)));
+let vertexC = vertexC0.Map((v) => v.Add(vertexC1.Sub(v).Mul(p)));
+let vertexD = vertexD0.Map((v) => v.Add(vertexD1.Sub(v).Mul(p)));
+let vertexE = vertexE0.Map((v) => v.Add(vertexE1.Sub(v).Mul(p)));
+
+// let vertexA = new Point(1 / (kA * 2 + 3), 1 / (kA * 2 + 3), 1);
+// let vertexB = new Point(1 / (kA + 2), kA, 2 / (kA + 2));
+// let vertexC = new Point(0, (kA * 2 + 1) / (kA + 2), kA);
 
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
@@ -207,15 +222,32 @@ let solidA = new Polyhedron([
 ]);
 
 let listSolid = [solidA];
+let arcXY = Math.PI / 8;
+let sinXY = Math.sin(arcXY);
+let cosXY = Math.cos(arcXY);
+let arcZY = Math.PI * (0.5 - 1 / 16);
+let sinZY = Math.sin(arcZY);
+let cosZY = Math.cos(arcZY);
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;
-	let arcXY = timeSec * (Math.PI / 4);
-	let sinXY = Math.sin(arcXY);
-	let cosXY = Math.cos(arcXY);
-	let arcZY = Math.PI * (0.5 - 1 / 16);
-	let sinZY = Math.sin(arcZY);
-	let cosZY = Math.cos(arcZY);
+	let t = timeSec % 4;
+	let tq = t | 0;
+	let tr = t - tq;
+	switch (tq) {
+		case 0:
+			p = 0;
+			break;
+		case 1:
+			p = tr;
+			break;
+		case 2:
+			p = 1;
+			break;
+		case 3:
+			p = 1 - tr;
+			break;
+	};
 	let r = vertexA.GetValue().GetLength();
 	painter.Draw(listSolid, (v) => (new VectorPoint(
 		(v.x * cosXY - v.y * sinXY) / r,

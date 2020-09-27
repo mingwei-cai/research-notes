@@ -9,7 +9,7 @@ import {
 
 let vLight = new VectorPoint(0, 3, 4);
 let focalLength = 12;
-let painter = new Painter(document.querySelector('canvas.Archimedean-3-3-3-3-4'), vLight, focalLength);
+let painter = new Painter(document.querySelector('canvas.Archimedean-3-3-3-3-4-to-3-4-4-4'), vLight, focalLength);
 let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
@@ -31,7 +31,11 @@ let Solve = function (f, xA, xB) {
 };
 let kA = Solve((x) => (((x + 1) * x + 1) * x - 1), 2, 1);
 let kB = Math.SQRT2 / (1 + kA);
-let vertexA = new Point(kA * kB, kA * kA * kB, kB);
+let kC = Math.SQRT1_2;
+let vertexA0 = new Point(kA * kB, kA * kA * kB, kB);
+let vertexA1 = new VectorPoint(1 / (kC * 2 + 1), 1 / (kC * 2 + 1), 1);
+let p = 0;
+let vertexA = vertexA0.Map((v) => v.Add(vertexA1.Sub(v).Mul(p)));
 
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
@@ -94,15 +98,32 @@ let solidA = new Polyhedron([
 ]);
 
 let listSolid = [solidA];
+let arcXY = Math.PI / 8;
+let sinXY = Math.sin(arcXY);
+let cosXY = Math.cos(arcXY);
+let arcZY = Math.PI * (0.5 - 1 / 16);
+let sinZY = Math.sin(arcZY);
+let cosZY = Math.cos(arcZY);
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;
-	let arcXY = timeSec * (Math.PI / 4);
-	let sinXY = Math.sin(arcXY);
-	let cosXY = Math.cos(arcXY);
-	let arcZY = Math.PI * (0.5 - 1 / 16);
-	let sinZY = Math.sin(arcZY);
-	let cosZY = Math.cos(arcZY);
+	let t = timeSec % 4;
+	let tq = t | 0;
+	let tr = t - tq;
+	switch (tq) {
+		case 0:
+			p = 0;
+			break;
+		case 1:
+			p = tr;
+			break;
+		case 2:
+			p = 1;
+			break;
+		case 3:
+			p = 1 - tr;
+			break;
+	};
 	let r = vertexA.GetValue().GetLength();
 	painter.Draw(listSolid, (v) => (new VectorPoint(
 		(v.x * cosXY - v.y * sinXY) / r,

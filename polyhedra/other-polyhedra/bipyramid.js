@@ -54,6 +54,9 @@ listFaceA.push(new Polygon([
 
 let solidA = new Polyhedron(listFaceA);
 let listSolid = [solidA];
+let arcZY = Math.PI * (0.5 - 1 / 16);
+let sinZY = Math.sin(arcZY);
+let cosZY = Math.cos(arcZY);
 let r = (zA > rA ? zA : rA);
 
 let DrawFrame = function () {
@@ -61,9 +64,6 @@ let DrawFrame = function () {
 	let arcXY = timeSec * (Math.PI / 4);
 	let sinXY = Math.sin(arcXY);
 	let cosXY = Math.cos(arcXY);
-	let arcZY = Math.PI * (0.5 - 1 / 16);
-	let sinZY = Math.sin(arcZY);
-	let cosZY = Math.cos(arcZY);
 	painter.Draw(listSolid, (v) => (new VectorPoint(
 		(v.x * cosXY - v.y * sinXY) / r,
 		((v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY) / r,

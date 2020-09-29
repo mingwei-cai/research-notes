@@ -15,6 +15,7 @@ let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 
 let kA = Math.SQRT1_2;
 let vertexA = new Point(kA, kA, kA);
+
 let faceA = new Polygon([
 	vertexA.Map(VectorPoint.listSymmetry[0o00]),
 	vertexA.Map(VectorPoint.listSymmetry[0o11]),
@@ -29,17 +30,18 @@ let solidA = new Polyhedron([
 	faceA.Map(VectorPoint.listSymmetry[0o57]),
 	faceA.Map(VectorPoint.listSymmetry[0o37]),
 ]);
+
 let listSolid = [solidA];
+let arcZY = Math.PI * (0.5 - 1 / 16);
+let sinZY = Math.sin(arcZY);
+let cosZY = Math.cos(arcZY);
+let r = vertexA.GetValue().GetLength();
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;
 	let arcXY = timeSec * (Math.PI / 4);
 	let sinXY = Math.sin(arcXY);
 	let cosXY = Math.cos(arcXY);
-	let arcZY = Math.PI * (0.5 - 1 / 16);
-	let sinZY = Math.sin(arcZY);
-	let cosZY = Math.cos(arcZY);
-	let r = vertexA.GetValue().GetLength();
 	painter.Draw(listSolid, (v) => (new VectorPoint(
 		(v.x * cosXY - v.y * sinXY) / r,
 		((v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY) / r,

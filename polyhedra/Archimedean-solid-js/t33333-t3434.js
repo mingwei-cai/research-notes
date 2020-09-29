@@ -17,7 +17,7 @@ let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 
 let kA = 2 / (Math.sqrt(5) + 1);
 let vertexA0 = new Point(0, kA, 1);
-let vertexA1 = new Point(0, 1, 1);
+let vertexA1 = new VectorPoint(0, 1, 1);
 let p = 0;
 let vertexA = vertexA0.Map((v) => v.Add(vertexA1.Sub(v).Mul(p)));
 
@@ -60,7 +60,14 @@ let solidA = new Polyhedron([
 	faceC.Map(VectorPoint.listSymmetry[0o45]),
 	faceC.Map(VectorPoint.listSymmetry[0o46]),
 ]);
+
 let listSolid = [solidA];
+let arcXY = Math.PI / 8;
+let sinXY = Math.sin(arcXY);
+let cosXY = Math.cos(arcXY);
+let arcZY = Math.PI * (0.5 - 1 / 16);
+let sinZY = Math.sin(arcZY);
+let cosZY = Math.cos(arcZY);
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

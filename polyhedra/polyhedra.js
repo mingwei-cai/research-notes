@@ -326,8 +326,9 @@ VectorPolygon.prototype.GetCenter = function () {
 	let vY = uZ.Cross(uX);
 	let vZ = uX.Cross(uY);
 	let det = uX.Dot(vX);
-	if (det == 0) {
-		return new VectorPoint(0, 0, 0);
+	if (Math.abs(det) < 2 ** -48) {
+		let n = this.listVertex.length;
+		return new VectorPoint(sumX / n, sumY / n, sumZ / n);
 	};
 	let vNormal = (vX.Mul(sumX)).Add(vY.Mul(sumY)).Add(vZ.Mul(sumZ)).Div(det);
 	return vNormal.Div(vNormal.Dot(vNormal));

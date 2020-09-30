@@ -35,7 +35,7 @@ body {
 .menu::before, .menu::after {
 	content: "";
 	display: block;
-	height: 16px;
+	height: 12px;
 }
 
 .menu ul {

@@ -1,13 +1,12 @@
 import {
 	Color,
-	VectorPoint,
 	Point,
 	Polygon,
 	Polyhedron,
 	Painter,
 } from "../polyhedra.js";
 
-let vLight = new VectorPoint(0, 3, 4);
+let vLight = new Point(0, 3, 4);
 let focalLength = 12;
 let painter = new Painter(document.querySelector('canvas.Catalan-t366-t3333'), vLight, focalLength);
 let lineWidth = 3;
@@ -20,34 +19,34 @@ let vertexA0 = Point.At(
 	new Point(1, -1, 1),
 	1 / 3,
 );
-let vertexA1 = new VectorPoint(0, 0, 1);
+let vertexA1 = new Point(0, 0, 1);
 let p = 0;
-let vertexA = vertexA0.Map((v) => v.Add(vertexA1.Sub(v).Mul(p)));
+let vertexA = vertexA0.Map((v) => Point.At(v, vertexA1, p));
 
 let faceA = new Polygon([
-	vertexA.Map(VectorPoint.listSymmetry[0o00]),
-	vertexA.Map(VectorPoint.listSymmetry[0o10]),
-	vertexA.Map(VectorPoint.listSymmetry[0o20]),
-	vertexA.Map(VectorPoint.listSymmetry[0o30]),
-	vertexA.Map(VectorPoint.listSymmetry[0o40]),
-	vertexA.Map(VectorPoint.listSymmetry[0o50]),
+	vertexA.Map(Point.listSymmetry[0o00]),
+	vertexA.Map(Point.listSymmetry[0o10]),
+	vertexA.Map(Point.listSymmetry[0o20]),
+	vertexA.Map(Point.listSymmetry[0o30]),
+	vertexA.Map(Point.listSymmetry[0o40]),
+	vertexA.Map(Point.listSymmetry[0o50]),
 ], 0, colorA);
 let faceB = new Polygon([
-	vertexA.Map(VectorPoint.listSymmetry[0o02]),
-	vertexA.Map(VectorPoint.listSymmetry[0o21]),
-	vertexA.Map(VectorPoint.listSymmetry[0o44]),
+	vertexA.Map(Point.listSymmetry[0o02]),
+	vertexA.Map(Point.listSymmetry[0o21]),
+	vertexA.Map(Point.listSymmetry[0o44]),
 ], 0, colorB);
 
 let solidA = new Polyhedron([
-	faceA.Map(VectorPoint.listSymmetry[0o01]),
-	faceA.Map(VectorPoint.listSymmetry[0o02]),
-	faceA.Map(VectorPoint.listSymmetry[0o04]),
-	faceA.Map(VectorPoint.listSymmetry[0o07]),
+	faceA.Map(Point.listSymmetry[0o01]),
+	faceA.Map(Point.listSymmetry[0o02]),
+	faceA.Map(Point.listSymmetry[0o04]),
+	faceA.Map(Point.listSymmetry[0o07]),
 
-	faceB.Map(VectorPoint.listSymmetry[0o00]),
-	faceB.Map(VectorPoint.listSymmetry[0o03]),
-	faceB.Map(VectorPoint.listSymmetry[0o05]),
-	faceB.Map(VectorPoint.listSymmetry[0o06]),
+	faceB.Map(Point.listSymmetry[0o00]),
+	faceB.Map(Point.listSymmetry[0o03]),
+	faceB.Map(Point.listSymmetry[0o05]),
+	faceB.Map(Point.listSymmetry[0o06]),
 ]);
 
 let listSolid = [solidA];
@@ -78,7 +77,7 @@ let DrawFrame = function () {
 			break;
 	};
 	let r = vertexA.GetValue().GetLength();
-	painter.Draw(listSolid, (v) => (new VectorPoint(
+	painter.Draw(listSolid, (v) => (new Point(
 		(v.x * cosXY - v.y * sinXY) / r,
 		((v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY) / r,
 		(v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY) / r,

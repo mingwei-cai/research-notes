@@ -80,7 +80,7 @@ Polygon2D.prototype.GetValue = function () {
 
 // ======================== 3D 座標點 ========================
 
-let VectorPoint = class {
+let Point = class {
 	y = 0;
 	z = 0;
 	z = 0;
@@ -92,62 +92,62 @@ let VectorPoint = class {
 	};
 };
 
-/** @type {(v: VectorPoint) => VectorPoint} */
-VectorPoint.prototype.Add = function (v) {
-	return new VectorPoint(
+/** @type {(v: Point) => Point} */
+Point.prototype.Add = function (v) {
+	return new Point(
 		this.x + v.x,
 		this.y + v.y,
 		this.z + v.z,
 	);
 };
 
-/** @type {(v: VectorPoint) => VectorPoint} */
-VectorPoint.prototype.Sub = function (v) {
-	return new VectorPoint(
+/** @type {(v: Point) => Point} */
+Point.prototype.Sub = function (v) {
+	return new Point(
 		this.x - v.x,
 		this.y - v.y,
 		this.z - v.z,
 	);
 };
 
-/** @type {(k: number) => VectorPoint} */
-VectorPoint.prototype.Mul = function (k) {
-	return new VectorPoint(
+/** @type {(k: number) => Point} */
+Point.prototype.Mul = function (k) {
+	return new Point(
 		this.x * k,
 		this.y * k,
 		this.z * k,
 	);
 };
 
-/** @type {(k: number) => VectorPoint} */
-VectorPoint.prototype.Div = function (k) {
-	return new VectorPoint(
+/** @type {(k: number) => Point} */
+Point.prototype.Div = function (k) {
+	return new Point(
 		this.x / k,
 		this.y / k,
 		this.z / k,
 	);
 };
 
-/** @type {(v: VectorPoint) => VectorPoint} */
-VectorPoint.prototype.Cross = function (v) {
-	return new VectorPoint(
+/** @type {(v: Point) => Point} */
+Point.prototype.Cross = function (v) {
+	return new Point(
 		this.y * v.z - this.z * v.y,
 		this.z * v.x - this.x * v.z,
 		this.x * v.y - this.y * v.x,
 	);
 };
 
-/** @type {(v: VectorPoint) => number} */
-VectorPoint.prototype.Dot = function (v) {
+/** @type {(v: Point) => number} */
+Point.prototype.Dot = function (v) {
 	return this.x * v.x + this.y * v.y + this.z * v.z;
 };
 
-VectorPoint.prototype.GetLength = function () {
+Point.prototype.GetLength = function () {
 	return Math.sqrt(this.Dot(this));
 };
 
 /** @type {(focalLength: number) => Point2D} */
-VectorPoint.prototype.GetProjection = function (focalLength) {
+Point.prototype.GetProjection = function (focalLength) {
 	let r = focalLength / (focalLength - this.z);
 	return new Point2D(
 		this.x * r,
@@ -155,69 +155,69 @@ VectorPoint.prototype.GetProjection = function (focalLength) {
 	);
 };
 
-/** @typedef {(v: VectorPoint) => VectorPoint} Transformation */
+/** @typedef {(v: Point) => Point} Transformation */
 'JSDoc @typedef Transformation';
 
 /** @type {Transformation[]} */
-VectorPoint.listSymmetry = [
+Point.listSymmetry = [
 
-	(v) => new VectorPoint(+v.x, +v.y, +v.z),
-	(v) => new VectorPoint(-v.x, +v.y, +v.z),
-	(v) => new VectorPoint(+v.x, -v.y, +v.z),
-	(v) => new VectorPoint(-v.x, -v.y, +v.z),
-	(v) => new VectorPoint(+v.x, +v.y, -v.z),
-	(v) => new VectorPoint(-v.x, +v.y, -v.z),
-	(v) => new VectorPoint(+v.x, -v.y, -v.z),
-	(v) => new VectorPoint(-v.x, -v.y, -v.z),
+	(v) => new Point(+v.x, +v.y, +v.z),
+	(v) => new Point(-v.x, +v.y, +v.z),
+	(v) => new Point(+v.x, -v.y, +v.z),
+	(v) => new Point(-v.x, -v.y, +v.z),
+	(v) => new Point(+v.x, +v.y, -v.z),
+	(v) => new Point(-v.x, +v.y, -v.z),
+	(v) => new Point(+v.x, -v.y, -v.z),
+	(v) => new Point(-v.x, -v.y, -v.z),
 
-	(v) => new VectorPoint(+v.y, +v.x, +v.z),
-	(v) => new VectorPoint(-v.y, +v.x, +v.z),
-	(v) => new VectorPoint(+v.y, -v.x, +v.z),
-	(v) => new VectorPoint(-v.y, -v.x, +v.z),
-	(v) => new VectorPoint(+v.y, +v.x, -v.z),
-	(v) => new VectorPoint(-v.y, +v.x, -v.z),
-	(v) => new VectorPoint(+v.y, -v.x, -v.z),
-	(v) => new VectorPoint(-v.y, -v.x, -v.z),
+	(v) => new Point(+v.y, +v.x, +v.z),
+	(v) => new Point(-v.y, +v.x, +v.z),
+	(v) => new Point(+v.y, -v.x, +v.z),
+	(v) => new Point(-v.y, -v.x, +v.z),
+	(v) => new Point(+v.y, +v.x, -v.z),
+	(v) => new Point(-v.y, +v.x, -v.z),
+	(v) => new Point(+v.y, -v.x, -v.z),
+	(v) => new Point(-v.y, -v.x, -v.z),
 
-	(v) => new VectorPoint(+v.y, +v.z, +v.x),
-	(v) => new VectorPoint(-v.y, +v.z, +v.x),
-	(v) => new VectorPoint(+v.y, -v.z, +v.x),
-	(v) => new VectorPoint(-v.y, -v.z, +v.x),
-	(v) => new VectorPoint(+v.y, +v.z, -v.x),
-	(v) => new VectorPoint(-v.y, +v.z, -v.x),
-	(v) => new VectorPoint(+v.y, -v.z, -v.x),
-	(v) => new VectorPoint(-v.y, -v.z, -v.x),
+	(v) => new Point(+v.y, +v.z, +v.x),
+	(v) => new Point(-v.y, +v.z, +v.x),
+	(v) => new Point(+v.y, -v.z, +v.x),
+	(v) => new Point(-v.y, -v.z, +v.x),
+	(v) => new Point(+v.y, +v.z, -v.x),
+	(v) => new Point(-v.y, +v.z, -v.x),
+	(v) => new Point(+v.y, -v.z, -v.x),
+	(v) => new Point(-v.y, -v.z, -v.x),
 
-	(v) => new VectorPoint(+v.x, +v.z, +v.y),
-	(v) => new VectorPoint(-v.x, +v.z, +v.y),
-	(v) => new VectorPoint(+v.x, -v.z, +v.y),
-	(v) => new VectorPoint(-v.x, -v.z, +v.y),
-	(v) => new VectorPoint(+v.x, +v.z, -v.y),
-	(v) => new VectorPoint(-v.x, +v.z, -v.y),
-	(v) => new VectorPoint(+v.x, -v.z, -v.y),
-	(v) => new VectorPoint(-v.x, -v.z, -v.y),
+	(v) => new Point(+v.x, +v.z, +v.y),
+	(v) => new Point(-v.x, +v.z, +v.y),
+	(v) => new Point(+v.x, -v.z, +v.y),
+	(v) => new Point(-v.x, -v.z, +v.y),
+	(v) => new Point(+v.x, +v.z, -v.y),
+	(v) => new Point(-v.x, +v.z, -v.y),
+	(v) => new Point(+v.x, -v.z, -v.y),
+	(v) => new Point(-v.x, -v.z, -v.y),
 
-	(v) => new VectorPoint(+v.z, +v.x, +v.y),
-	(v) => new VectorPoint(-v.z, +v.x, +v.y),
-	(v) => new VectorPoint(+v.z, -v.x, +v.y),
-	(v) => new VectorPoint(-v.z, -v.x, +v.y),
-	(v) => new VectorPoint(+v.z, +v.x, -v.y),
-	(v) => new VectorPoint(-v.z, +v.x, -v.y),
-	(v) => new VectorPoint(+v.z, -v.x, -v.y),
-	(v) => new VectorPoint(-v.z, -v.x, -v.y),
+	(v) => new Point(+v.z, +v.x, +v.y),
+	(v) => new Point(-v.z, +v.x, +v.y),
+	(v) => new Point(+v.z, -v.x, +v.y),
+	(v) => new Point(-v.z, -v.x, +v.y),
+	(v) => new Point(+v.z, +v.x, -v.y),
+	(v) => new Point(-v.z, +v.x, -v.y),
+	(v) => new Point(+v.z, -v.x, -v.y),
+	(v) => new Point(-v.z, -v.x, -v.y),
 
-	(v) => new VectorPoint(+v.z, +v.y, +v.x),
-	(v) => new VectorPoint(-v.z, +v.y, +v.x),
-	(v) => new VectorPoint(+v.z, -v.y, +v.x),
-	(v) => new VectorPoint(-v.z, -v.y, +v.x),
-	(v) => new VectorPoint(+v.z, +v.y, -v.x),
-	(v) => new VectorPoint(-v.z, +v.y, -v.x),
-	(v) => new VectorPoint(+v.z, -v.y, -v.x),
-	(v) => new VectorPoint(-v.z, -v.y, -v.x),
+	(v) => new Point(+v.z, +v.y, +v.x),
+	(v) => new Point(-v.z, +v.y, +v.x),
+	(v) => new Point(+v.z, -v.y, +v.x),
+	(v) => new Point(-v.z, -v.y, +v.x),
+	(v) => new Point(+v.z, +v.y, -v.x),
+	(v) => new Point(-v.z, +v.y, -v.x),
+	(v) => new Point(+v.z, -v.y, -v.x),
+	(v) => new Point(-v.z, -v.y, -v.x),
 
 ];
 
-/** @typedef {{GetValue: () => VectorPoint}} VertexData */
+/** @typedef {{GetValue: () => Point}} VertexData */
 'JSDoc @typedef VertexData';
 
 let PointManager = class {
@@ -241,20 +241,8 @@ PointManager.prototype.Map = function (Trans) {
 	return new PointManager(this, Trans);
 };
 
-let Point = class {
-	x = 0;
-	y = 0;
-	z = 0;
-	/** @type {(x: number, y: number, z: number)} */
-	constructor(x, y, z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	};
-};
-
 Point.prototype.GetValue = function () {
-	return new VectorPoint(this.x, this.y, this.z);
+	return this;
 };
 
 /** @type {(Trans: Transformation) => PointManager} */
@@ -275,13 +263,13 @@ Point.At = function (vertexA, vertexB, k) {
 
 // ======================== 3D 多邊形 ========================
 
-let VectorPolygon = class {
-	/** @type {VectorPoint[]} */
+let SimplePolygon = class {
+	/** @type {Point[]} */
 	listVertex = null;
 	order = 0;
 	/** @type {Color} */
 	color = null;
-	/** @type {(listVertex: VectorPoint[], order: number, color: Color)} */
+	/** @type {(listVertex: Point[], order: number, color: Color)} */
 	constructor(listVertex, order, color = null) {
 		this.listVertex = listVertex;
 		this.order = order;
@@ -289,16 +277,16 @@ let VectorPolygon = class {
 	};
 };
 
-/** @type {(Trans: Transformation, color: Color) => VectorPolygon} */
-VectorPolygon.prototype.Map = function (Trans, color = null) {
-	return new VectorPolygon(
+/** @type {(Trans: Transformation, color: Color) => SimplePolygon} */
+SimplePolygon.prototype.Map = function (Trans, color = null) {
+	return new SimplePolygon(
 		Trans == null ? this.listVertex : this.listVertex.map(Trans),
 		this.order,
 		color == null ? this.color : color.Over(this.color),
 	);
 };
 
-VectorPolygon.prototype.GetCenter = function () {
+SimplePolygon.prototype.GetCenter = function () {
 	let sumX = 0;
 	let sumY = 0;
 	let sumZ = 0;
@@ -319,23 +307,23 @@ VectorPolygon.prototype.GetCenter = function () {
 		sumZX += v.z * v.x;
 		sumXY += v.x * v.y;
 	};
-	let uX = new VectorPoint(sumXX, sumXY, sumZX);
-	let uY = new VectorPoint(sumXY, sumYY, sumYZ);
-	let uZ = new VectorPoint(sumZX, sumYZ, sumZZ);
+	let uX = new Point(sumXX, sumXY, sumZX);
+	let uY = new Point(sumXY, sumYY, sumYZ);
+	let uZ = new Point(sumZX, sumYZ, sumZZ);
 	let vX = uY.Cross(uZ);
 	let vY = uZ.Cross(uX);
 	let vZ = uX.Cross(uY);
 	let det = uX.Dot(vX);
 	if (Math.abs(det) < 2 ** -48) {
 		let n = this.listVertex.length;
-		return new VectorPoint(sumX / n, sumY / n, sumZ / n);
+		return new Point(sumX / n, sumY / n, sumZ / n);
 	};
 	let vNormal = (vX.Mul(sumX)).Add(vY.Mul(sumY)).Add(vZ.Mul(sumZ)).Div(det);
 	return vNormal.Div(vNormal.Dot(vNormal));
 };
 
-/** @type {(focalLength: number, vLight: VectorPoint) => Polygon2D} */
-VectorPolygon.prototype.GetProjection = function (focalLength, vLight) {
+/** @type {(focalLength: number, vLight: Point) => Polygon2D} */
+SimplePolygon.prototype.GetProjection = function (focalLength, vLight) {
 	let vCenter = this.GetCenter();
 	let d = vCenter.Dot(vCenter);
 	let isBack = (focalLength * vCenter.z < d);
@@ -358,7 +346,7 @@ VectorPolygon.prototype.GetProjection = function (focalLength, vLight) {
 	);
 };
 
-/** @typedef {{GetValue: (m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon}} FaceData */
+/** @typedef {{GetValue: (m: WeakMap<Polygon, SimplePolygon>) => SimplePolygon}} FaceData */
 'JSDoc @typedef FaceData';
 
 let PolygonManager = class {
@@ -376,7 +364,7 @@ let PolygonManager = class {
 	};
 };
 
-/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon} */
+/** @type {(m: WeakMap<Polygon, SimplePolygon>) => SimplePolygon} */
 PolygonManager.prototype.GetValue = function (m) {
 	return this.data.GetValue(m).Map(this.Trans, this.color);
 };
@@ -400,12 +388,12 @@ let Polygon = class {
 	};
 };
 
-/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon} */
+/** @type {(m: WeakMap<Polygon, SimplePolygon>) => SimplePolygon} */
 Polygon.prototype.GetValue = function (m) {
 	if (m.has(this)) {
 		return m.get(this);
 	};
-	let value = new VectorPolygon(
+	let value = new SimplePolygon(
 		this.listVertex.map((vertex) => vertex.GetValue()),
 		this.order,
 		this.color,
@@ -421,7 +409,7 @@ Polygon.prototype.Map = function (Trans, color = null) {
 
 // ======================== 3D 多面體 ========================
 
-/** @typedef {{GetValue: (m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon[]}} SolidData */
+/** @typedef {{GetValue: (m: WeakMap<Polygon, SimplePolygon>) => SimplePolygon[]}} SolidData */
 'JSDoc @typedef SolidData';
 
 let PolyhedronManager = class {
@@ -439,7 +427,7 @@ let PolyhedronManager = class {
 	};
 };
 
-/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon[]} */
+/** @type {(m: WeakMap<Polygon, SimplePolygon>) => SimplePolygon[]} */
 PolyhedronManager.prototype.GetValue = function (m) {
 	return this.data.GetValue(m).map((face) => face.Map(this.Trans, this.color));
 };
@@ -458,7 +446,7 @@ let Polyhedron = class {
 	};
 };
 
-/** @type {(m: WeakMap<Polygon, VectorPolygon>) => VectorPolygon[]} */
+/** @type {(m: WeakMap<Polygon, SimplePolygon>) => SimplePolygon[]} */
 Polyhedron.prototype.GetValue = function (m) {
 	return this.listFace.map((face) => face.GetValue(m));
 };
@@ -473,13 +461,13 @@ Polyhedron.prototype.Map = function (Trans, color = null) {
 let Painter = class {
 	/** @type {HTMLCanvasElement} */
 	cvs = null;
-	/** @type {VectorPoint} */
+	/** @type {Point} */
 	vLight = null;
 	focalLength = 0;
 	ox = 0;
 	oy = 0;
 	scale = 0;
-	/** @type {(cvs: HTMLCanvasElement, vLight: VectorPoint, focalLength: number)} */
+	/** @type {(cvs: HTMLCanvasElement, vLight: Point, focalLength: number)} */
 	constructor(cvs, vLight, focalLength) {
 		this.cvs = cvs;
 		this.vLight = vLight.Div(vLight.GetLength());
@@ -502,7 +490,7 @@ Painter.prototype.Resize = function (w, h) {
 /** @type {(listSolid: SolidData[], Trans: Transformation) => Polygon2D[]} */
 Painter.prototype.ListPolygon = function (listSolid, Trans) {
 	let m = new WeakMap();
-	/** @type {VectorPolygon[]} */
+	/** @type {SimplePolygon[]} */
 	let listFace = Array.prototype.concat.apply([], listSolid.map((solid) => solid.GetValue(m)));
 	return listFace.map((face) => face.Map(Trans).GetProjection(this.focalLength, this.vLight)).sort((a, b) => a.order - b.order);
 };
@@ -532,7 +520,6 @@ Painter.prototype.Draw = function (listSolid, Trans, lineWidth = 0) {
 
 export {
 	Color,
-	VectorPoint,
 	Point,
 	Polygon,
 	Polyhedron,

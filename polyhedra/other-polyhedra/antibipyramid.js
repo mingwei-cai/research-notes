@@ -1,13 +1,12 @@
 import {
 	Color,
-	VectorPoint,
 	Point,
 	Polygon,
 	Polyhedron,
 	Painter,
 } from "../polyhedra.js";
 
-let vLight = new VectorPoint(0, 3, 4);
+let vLight = new Point(0, 3, 4);
 let focalLength = 12;
 let painter = new Painter(document.querySelector('canvas.antibipyramid'), vLight, focalLength);
 let lineWidth = 3;
@@ -77,7 +76,7 @@ let DrawFrame = function () {
 	let arcXY = timeSec * (Math.PI / 4);
 	let sinXY = Math.sin(arcXY);
 	let cosXY = Math.cos(arcXY);
-	painter.Draw(listSolid, (v) => (new VectorPoint(
+	painter.Draw(listSolid, (v) => (new Point(
 		(v.x * cosXY - v.y * sinXY) / r,
 		((v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY) / r,
 		(v.z * cosZY - (v.y * cosXY + v.x * sinXY) * sinZY) / r,

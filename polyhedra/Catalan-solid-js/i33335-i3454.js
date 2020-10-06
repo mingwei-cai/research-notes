@@ -13,6 +13,7 @@ let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
 let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
+let colorD = new Color(0xFF, 0x66, 0x99, 0.8);
 
 /** @type {(f: (x: number), xA: number, xB: number) => number} */
 let Solve = function (f, xA, xB) {

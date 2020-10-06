@@ -13,40 +13,36 @@ let lineWidth = 3;
 let colorA = new Color(0xCC, 0x99, 0xFF, 0.8);
 let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
 let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
+let colorD = new Color(0xFF, 0x66, 0x99, 0.8);
 
-let vertexA0 = Point.At(
-	new Point(0, 0, 1),
-	new Point(1, -1, 1),
-	1 / 3,
+let vertexB0 = Point.At(
+	new Point(1 / 3, 1 / 3, 1 / 3),
+	new Point(1, 1, 1),
+	2 / 5,
 );
-let vertexA1 = new Point(0, 0, 1);
+let vertexB1 = new Point(1, 1, 1);
 let p = 0;
-let vertexA = vertexA0.Map((v) => Point.At(v, vertexA1, p));
+let vertexA = new Point(1, -1, 1);
+let vertexB = vertexB0.Map((v) => Point.At(v, vertexB1, p));
 
 let faceA = new Polygon([
 	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexA.Map(Point.listSymmetry[0o10]),
 	vertexA.Map(Point.listSymmetry[0o20]),
-	vertexA.Map(Point.listSymmetry[0o30]),
-	vertexA.Map(Point.listSymmetry[0o40]),
-	vertexA.Map(Point.listSymmetry[0o50]),
-], 0, colorA);
-let faceB = new Polygon([
-	vertexA.Map(Point.listSymmetry[0o02]),
-	vertexA.Map(Point.listSymmetry[0o21]),
-	vertexA.Map(Point.listSymmetry[0o44]),
-], 0, colorB);
-
+	vertexB.Map(Point.listSymmetry[0o00]),
+], 0);
 let solidA = new Polyhedron([
-	faceA.Map(Point.listSymmetry[0o01]),
-	faceA.Map(Point.listSymmetry[0o02]),
-	faceA.Map(Point.listSymmetry[0o04]),
-	faceA.Map(Point.listSymmetry[0o07]),
-
-	faceB.Map(Point.listSymmetry[0o00]),
-	faceB.Map(Point.listSymmetry[0o03]),
-	faceB.Map(Point.listSymmetry[0o05]),
-	faceB.Map(Point.listSymmetry[0o06]),
+	faceA.Map(Point.listSymmetry[0o00], colorA),
+	faceA.Map(Point.listSymmetry[0o03], colorA),
+	faceA.Map(Point.listSymmetry[0o05], colorA),
+	faceA.Map(Point.listSymmetry[0o06], colorA),
+	faceA.Map(Point.listSymmetry[0o20], colorB),
+	faceA.Map(Point.listSymmetry[0o23], colorB),
+	faceA.Map(Point.listSymmetry[0o25], colorB),
+	faceA.Map(Point.listSymmetry[0o26], colorB),
+	faceA.Map(Point.listSymmetry[0o40], colorC),
+	faceA.Map(Point.listSymmetry[0o43], colorC),
+	faceA.Map(Point.listSymmetry[0o45], colorC),
+	faceA.Map(Point.listSymmetry[0o46], colorC),
 ]);
 
 let listSolid = [solidA];

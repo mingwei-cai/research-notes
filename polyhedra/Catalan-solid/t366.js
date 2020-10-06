@@ -15,36 +15,31 @@ let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
 let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 let colorD = new Color(0xFF, 0x66, 0x99, 0.8);
 
-let vertexA = Point.At(
-	new Point(0, 0, 1),
-	new Point(1, -1, 1),
-	1 / 3,
+let vertexA = new Point(1, -1, 1);
+let vertexB = Point.At(
+	new Point(1 / 3, 1 / 3, 1 / 3),
+	new Point(1, 1, 1),
+	2 / 5,
 );
 
 let faceA = new Polygon([
 	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexA.Map(Point.listSymmetry[0o10]),
 	vertexA.Map(Point.listSymmetry[0o20]),
-	vertexA.Map(Point.listSymmetry[0o30]),
-	vertexA.Map(Point.listSymmetry[0o40]),
-	vertexA.Map(Point.listSymmetry[0o50]),
+	vertexB.Map(Point.listSymmetry[0o00]),
 ], 0, colorA);
-let faceB = new Polygon([
-	vertexA.Map(Point.listSymmetry[0o02]),
-	vertexA.Map(Point.listSymmetry[0o21]),
-	vertexA.Map(Point.listSymmetry[0o44]),
-], 0, colorB);
-
 let solidA = new Polyhedron([
-	faceA.Map(Point.listSymmetry[0o01]),
-	faceA.Map(Point.listSymmetry[0o02]),
-	faceA.Map(Point.listSymmetry[0o04]),
-	faceA.Map(Point.listSymmetry[0o07]),
-
-	faceB.Map(Point.listSymmetry[0o00]),
-	faceB.Map(Point.listSymmetry[0o03]),
-	faceB.Map(Point.listSymmetry[0o05]),
-	faceB.Map(Point.listSymmetry[0o06]),
+	faceA.Map(Point.listSymmetry[0o00]),
+	faceA.Map(Point.listSymmetry[0o03]),
+	faceA.Map(Point.listSymmetry[0o05]),
+	faceA.Map(Point.listSymmetry[0o06]),
+	faceA.Map(Point.listSymmetry[0o20]),
+	faceA.Map(Point.listSymmetry[0o23]),
+	faceA.Map(Point.listSymmetry[0o25]),
+	faceA.Map(Point.listSymmetry[0o26]),
+	faceA.Map(Point.listSymmetry[0o40]),
+	faceA.Map(Point.listSymmetry[0o43]),
+	faceA.Map(Point.listSymmetry[0o45]),
+	faceA.Map(Point.listSymmetry[0o46]),
 ]);
 
 let listSolid = [solidA];

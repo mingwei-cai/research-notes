@@ -53,7 +53,7 @@ listFaceA.push(new Polygon([
 
 let solidA = new Polyhedron(listFaceA);
 let listSolid = [solidA];
-let arcZY = Math.PI * (0.5 - 1 / 16);
+let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
 let r = (zA > rA ? zA : rA);

@@ -62,7 +62,7 @@ let listSolid = [solidA];
 let arcXY = Math.PI / 8;
 let sinXY = Math.sin(arcXY);
 let cosXY = Math.cos(arcXY);
-let arcZY = Math.PI * (0.5 - 1 / 16);
+let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
 

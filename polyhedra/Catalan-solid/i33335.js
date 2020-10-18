@@ -55,53 +55,89 @@ let vertexE = new Point(
 	(+ kC * kA + kD * (kA + 1) - 1) / (kD * 2),
 );
 
-let faceA = new Polygon([
+let dualA = Point.Dual([
 	vertexA.Map(Point.listSymmetry[0o00]),
 	vertexB.Map(Point.listSymmetry[0o00]),
 	vertexC.Map(Point.listSymmetry[0o00]),
 	vertexD.Map(Point.listSymmetry[0o00]),
 	vertexE.Map(Point.listSymmetry[0o00]),
-], 0, colorA);
-let faceB = new Polygon([
+]);
+let dualB = Point.Dual([
 	vertexC.Map(Point.listSymmetry[0o00]),
 	vertexC.Map(Point.listSymmetry[0o43]),
 	vertexC.Map(Point.listSymmetry[0o25]),
-], 0, colorB);
-let faceC = new Polygon([
+]);
+let dualC = Point.Dual([
 	vertexE.Map(Point.listSymmetry[0o00]),
 	vertexE.Map(Point.listSymmetry[0o20]),
 	vertexE.Map(Point.listSymmetry[0o40]),
-], 0, colorB);
-let faceD = new Polygon([
+]);
+let dualD = Point.Dual([
 	vertexA.Map(Point.listSymmetry[0o00]),
 	vertexB.Map(Point.listSymmetry[0o03]),
 	vertexD.Map(Point.listSymmetry[0o40]),
-], 0, colorB);
-let faceE = new Polygon([
+]);
+let dualE = Point.Dual([
 	vertexA.Map(Point.listSymmetry[0o00]),
 	vertexA.Map(Point.listSymmetry[0o03]),
 	vertexB.Map(Point.listSymmetry[0o00]),
-], 0, colorC);
-let faceF = new Polygon([
+]);
+let dualF = Point.Dual([
 	vertexB.Map(Point.listSymmetry[0o00]),
 	vertexC.Map(Point.listSymmetry[0o43]),
 	vertexC.Map(Point.listSymmetry[0o00]),
-], 0, colorC);
-let faceG = new Polygon([
+]);
+let dualG = Point.Dual([
 	vertexC.Map(Point.listSymmetry[0o00]),
 	vertexB.Map(Point.listSymmetry[0o25]),
 	vertexD.Map(Point.listSymmetry[0o00]),
-], 0, colorC);
-let faceH = new Polygon([
+]);
+let dualH = Point.Dual([
 	vertexD.Map(Point.listSymmetry[0o00]),
 	vertexE.Map(Point.listSymmetry[0o20]),
 	vertexE.Map(Point.listSymmetry[0o00]),
-], 0, colorC);
-let faceI = new Polygon([
+]);
+let dualI = Point.Dual([
 	vertexE.Map(Point.listSymmetry[0o00]),
 	vertexD.Map(Point.listSymmetry[0o40]),
 	vertexA.Map(Point.listSymmetry[0o00]),
-], 0, colorC);
+]);
+
+let faceA = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualE.Map(Point.listSymmetry[0o00]),
+	dualE.Map(Point.listSymmetry[0o03]),
+	dualD.Map(Point.listSymmetry[0o00]),
+	dualI.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
+let faceB = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualF.Map(Point.listSymmetry[0o00]),
+	dualG.Map(Point.listSymmetry[0o43]),
+	dualD.Map(Point.listSymmetry[0o03]),
+	dualE.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
+let faceC = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualG.Map(Point.listSymmetry[0o00]),
+	dualF.Map(Point.listSymmetry[0o25]),
+	dualB.Map(Point.listSymmetry[0o00]),
+	dualF.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
+let faceD = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualH.Map(Point.listSymmetry[0o00]),
+	dualI.Map(Point.listSymmetry[0o20]),
+	dualD.Map(Point.listSymmetry[0o20]),
+	dualG.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
+let faceE = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualI.Map(Point.listSymmetry[0o00]),
+	dualH.Map(Point.listSymmetry[0o40]),
+	dualC.Map(Point.listSymmetry[0o00]),
+	dualH.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
 
 let solidA = new Polyhedron([
 	faceA.Map(Point.listSymmetry[0o00]),
@@ -121,11 +157,27 @@ let solidA = new Polyhedron([
 	faceB.Map(Point.listSymmetry[0o03]),
 	faceB.Map(Point.listSymmetry[0o05]),
 	faceB.Map(Point.listSymmetry[0o06]),
+	faceB.Map(Point.listSymmetry[0o20]),
+	faceB.Map(Point.listSymmetry[0o23]),
+	faceB.Map(Point.listSymmetry[0o25]),
+	faceB.Map(Point.listSymmetry[0o26]),
+	faceB.Map(Point.listSymmetry[0o40]),
+	faceB.Map(Point.listSymmetry[0o43]),
+	faceB.Map(Point.listSymmetry[0o45]),
+	faceB.Map(Point.listSymmetry[0o46]),
 
 	faceC.Map(Point.listSymmetry[0o00]),
 	faceC.Map(Point.listSymmetry[0o03]),
 	faceC.Map(Point.listSymmetry[0o05]),
 	faceC.Map(Point.listSymmetry[0o06]),
+	faceC.Map(Point.listSymmetry[0o20]),
+	faceC.Map(Point.listSymmetry[0o23]),
+	faceC.Map(Point.listSymmetry[0o25]),
+	faceC.Map(Point.listSymmetry[0o26]),
+	faceC.Map(Point.listSymmetry[0o40]),
+	faceC.Map(Point.listSymmetry[0o43]),
+	faceC.Map(Point.listSymmetry[0o45]),
+	faceC.Map(Point.listSymmetry[0o46]),
 
 	faceD.Map(Point.listSymmetry[0o00]),
 	faceD.Map(Point.listSymmetry[0o03]),
@@ -152,65 +204,13 @@ let solidA = new Polyhedron([
 	faceE.Map(Point.listSymmetry[0o43]),
 	faceE.Map(Point.listSymmetry[0o45]),
 	faceE.Map(Point.listSymmetry[0o46]),
-
-	faceF.Map(Point.listSymmetry[0o00]),
-	faceF.Map(Point.listSymmetry[0o03]),
-	faceF.Map(Point.listSymmetry[0o05]),
-	faceF.Map(Point.listSymmetry[0o06]),
-	faceF.Map(Point.listSymmetry[0o20]),
-	faceF.Map(Point.listSymmetry[0o23]),
-	faceF.Map(Point.listSymmetry[0o25]),
-	faceF.Map(Point.listSymmetry[0o26]),
-	faceF.Map(Point.listSymmetry[0o40]),
-	faceF.Map(Point.listSymmetry[0o43]),
-	faceF.Map(Point.listSymmetry[0o45]),
-	faceF.Map(Point.listSymmetry[0o46]),
-
-	faceG.Map(Point.listSymmetry[0o00]),
-	faceG.Map(Point.listSymmetry[0o03]),
-	faceG.Map(Point.listSymmetry[0o05]),
-	faceG.Map(Point.listSymmetry[0o06]),
-	faceG.Map(Point.listSymmetry[0o20]),
-	faceG.Map(Point.listSymmetry[0o23]),
-	faceG.Map(Point.listSymmetry[0o25]),
-	faceG.Map(Point.listSymmetry[0o26]),
-	faceG.Map(Point.listSymmetry[0o40]),
-	faceG.Map(Point.listSymmetry[0o43]),
-	faceG.Map(Point.listSymmetry[0o45]),
-	faceG.Map(Point.listSymmetry[0o46]),
-
-	faceH.Map(Point.listSymmetry[0o00]),
-	faceH.Map(Point.listSymmetry[0o03]),
-	faceH.Map(Point.listSymmetry[0o05]),
-	faceH.Map(Point.listSymmetry[0o06]),
-	faceH.Map(Point.listSymmetry[0o20]),
-	faceH.Map(Point.listSymmetry[0o23]),
-	faceH.Map(Point.listSymmetry[0o25]),
-	faceH.Map(Point.listSymmetry[0o26]),
-	faceH.Map(Point.listSymmetry[0o40]),
-	faceH.Map(Point.listSymmetry[0o43]),
-	faceH.Map(Point.listSymmetry[0o45]),
-	faceH.Map(Point.listSymmetry[0o46]),
-
-	faceI.Map(Point.listSymmetry[0o00]),
-	faceI.Map(Point.listSymmetry[0o03]),
-	faceI.Map(Point.listSymmetry[0o05]),
-	faceI.Map(Point.listSymmetry[0o06]),
-	faceI.Map(Point.listSymmetry[0o20]),
-	faceI.Map(Point.listSymmetry[0o23]),
-	faceI.Map(Point.listSymmetry[0o25]),
-	faceI.Map(Point.listSymmetry[0o26]),
-	faceI.Map(Point.listSymmetry[0o40]),
-	faceI.Map(Point.listSymmetry[0o43]),
-	faceI.Map(Point.listSymmetry[0o45]),
-	faceI.Map(Point.listSymmetry[0o46]),
 ]);
 
 let listSolid = [solidA];
 let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
-let r = vertexA.GetValue().GetLength();
+let r = dualA.GetValue().GetLength();
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

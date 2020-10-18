@@ -32,7 +32,7 @@ let vertexC = Point.At(
 	1 / (kA * 2 + 1),
 );
 
-let faceA = new Polygon([
+let dualA = Point.Dual([
 	vertexA.Map(Point.listSymmetry[0o00]),
 	vertexB.Map(Point.listSymmetry[0o00]),
 	vertexC.Map(Point.listSymmetry[0o00]),
@@ -43,17 +43,33 @@ let faceA = new Polygon([
 	vertexC.Map(Point.listSymmetry[0o01]),
 	vertexB.Map(Point.listSymmetry[0o01]),
 	vertexA.Map(Point.listSymmetry[0o01]),
-], 0, colorA);
-let faceB = new Polygon([
+]);
+let dualB = Point.Dual([
 	vertexC.Map(Point.listSymmetry[0o00]),
 	vertexC.Map(Point.listSymmetry[0o20]),
 	vertexC.Map(Point.listSymmetry[0o40]),
-], 0, colorB);
-let faceC = new Polygon([
+]);
+let dualC = Point.Dual([
 	vertexB.Map(Point.listSymmetry[0o00]),
 	vertexA.Map(Point.listSymmetry[0o00]),
 	vertexB.Map(Point.listSymmetry[0o02]),
-], 0, colorB);
+]);
+
+let faceA = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o03]),
+	dualC.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
+let faceB = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o40]),
+	dualC.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
+let faceC = new Polygon([
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o40]),
+	dualB.Map(Point.listSymmetry[0o00]),
+], 0, colorA);
 
 let solidA = new Polyhedron([
 	faceA.Map(Point.listSymmetry[0o00]),
@@ -69,19 +85,6 @@ let solidA = new Polyhedron([
 	faceA.Map(Point.listSymmetry[0o45]),
 	faceA.Map(Point.listSymmetry[0o46]),
 
-	faceC.Map(Point.listSymmetry[0o00]),
-	faceC.Map(Point.listSymmetry[0o03]),
-	faceC.Map(Point.listSymmetry[0o05]),
-	faceC.Map(Point.listSymmetry[0o06]),
-	faceC.Map(Point.listSymmetry[0o20]),
-	faceC.Map(Point.listSymmetry[0o23]),
-	faceC.Map(Point.listSymmetry[0o25]),
-	faceC.Map(Point.listSymmetry[0o26]),
-	faceC.Map(Point.listSymmetry[0o40]),
-	faceC.Map(Point.listSymmetry[0o43]),
-	faceC.Map(Point.listSymmetry[0o45]),
-	faceC.Map(Point.listSymmetry[0o46]),
-
 	faceB.Map(Point.listSymmetry[0o00]),
 	faceB.Map(Point.listSymmetry[0o01]),
 	faceB.Map(Point.listSymmetry[0o02]),
@@ -90,13 +93,54 @@ let solidA = new Polyhedron([
 	faceB.Map(Point.listSymmetry[0o05]),
 	faceB.Map(Point.listSymmetry[0o06]),
 	faceB.Map(Point.listSymmetry[0o07]),
+	faceB.Map(Point.listSymmetry[0o20]),
+	faceB.Map(Point.listSymmetry[0o21]),
+	faceB.Map(Point.listSymmetry[0o22]),
+	faceB.Map(Point.listSymmetry[0o23]),
+	faceB.Map(Point.listSymmetry[0o24]),
+	faceB.Map(Point.listSymmetry[0o25]),
+	faceB.Map(Point.listSymmetry[0o26]),
+	faceB.Map(Point.listSymmetry[0o27]),
+	faceB.Map(Point.listSymmetry[0o40]),
+	faceB.Map(Point.listSymmetry[0o41]),
+	faceB.Map(Point.listSymmetry[0o42]),
+	faceB.Map(Point.listSymmetry[0o43]),
+	faceB.Map(Point.listSymmetry[0o44]),
+	faceB.Map(Point.listSymmetry[0o45]),
+	faceB.Map(Point.listSymmetry[0o46]),
+	faceB.Map(Point.listSymmetry[0o47]),
+
+	faceC.Map(Point.listSymmetry[0o00]),
+	faceC.Map(Point.listSymmetry[0o01]),
+	faceC.Map(Point.listSymmetry[0o02]),
+	faceC.Map(Point.listSymmetry[0o03]),
+	faceC.Map(Point.listSymmetry[0o04]),
+	faceC.Map(Point.listSymmetry[0o05]),
+	faceC.Map(Point.listSymmetry[0o06]),
+	faceC.Map(Point.listSymmetry[0o07]),
+	faceC.Map(Point.listSymmetry[0o20]),
+	faceC.Map(Point.listSymmetry[0o21]),
+	faceC.Map(Point.listSymmetry[0o22]),
+	faceC.Map(Point.listSymmetry[0o23]),
+	faceC.Map(Point.listSymmetry[0o24]),
+	faceC.Map(Point.listSymmetry[0o25]),
+	faceC.Map(Point.listSymmetry[0o26]),
+	faceC.Map(Point.listSymmetry[0o27]),
+	faceC.Map(Point.listSymmetry[0o40]),
+	faceC.Map(Point.listSymmetry[0o41]),
+	faceC.Map(Point.listSymmetry[0o42]),
+	faceC.Map(Point.listSymmetry[0o43]),
+	faceC.Map(Point.listSymmetry[0o44]),
+	faceC.Map(Point.listSymmetry[0o45]),
+	faceC.Map(Point.listSymmetry[0o46]),
+	faceC.Map(Point.listSymmetry[0o47]),
 ]);
 
 let listSolid = [solidA];
 let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
-let r = vertexA.GetValue().GetLength();
+let r = dualA.GetValue().GetLength();
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

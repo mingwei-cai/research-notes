@@ -16,21 +16,38 @@ let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 let colorD = new Color(0xFF, 0x66, 0x99, 0.8);
 
 let kA = 2 / (Math.sqrt(5) + 1);
-let vertexA = new Point(0, kA, 1);
-let vertexB = new Point(1 / (kA + 2), 0, 1);
-let vertexC = new Point(kA, kA, kA);
+let vertexA = new Point(0, 0, 1);
+let vertexB = new Point(1 / 2, kA / 2, (kA + 1) / 2);
+
+let dualA = Point.Dual([
+	vertexB.Map(Point.listSymmetry[0o20]),
+	vertexB.Map(Point.listSymmetry[0o00]),
+	vertexA.Map(Point.listSymmetry[0o00]),
+	vertexB.Map(Point.listSymmetry[0o01]),
+	vertexB.Map(Point.listSymmetry[0o21]),
+]);
+let dualB = Point.Dual([
+	vertexB.Map(Point.listSymmetry[0o00]),
+	vertexB.Map(Point.listSymmetry[0o20]),
+	vertexB.Map(Point.listSymmetry[0o40]),
+]);
+let dualC = Point.Dual([
+	vertexB.Map(Point.listSymmetry[0o00]),
+	vertexA.Map(Point.listSymmetry[0o00]),
+	vertexB.Map(Point.listSymmetry[0o02]),
+]);
 
 let faceA = new Polygon([
-	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexB.Map(Point.listSymmetry[0o00]),
-	vertexA.Map(Point.listSymmetry[0o03]),
-	vertexB.Map(Point.listSymmetry[0o03]),
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualC.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o03]),
+	dualC.Map(Point.listSymmetry[0o03]),
 ], 0, colorA);
 let faceB = new Polygon([
-	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexB.Map(Point.listSymmetry[0o00]),
-	vertexA.Map(Point.listSymmetry[0o40]),
-	vertexC.Map(Point.listSymmetry[0o00]),
+	dualC.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualB.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o40]),
 ], 0, colorA);
 
 let solidA = new Polyhedron([
@@ -71,7 +88,7 @@ let listSolid = [solidA];
 let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
-let r = vertexA.GetValue().GetLength();
+let r = dualA.GetValue().GetLength();
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

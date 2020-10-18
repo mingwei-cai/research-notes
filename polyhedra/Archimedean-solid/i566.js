@@ -38,14 +38,6 @@ let faceA = new Polygon([
 	vertexB.Map(Point.listSymmetry[0o01]),
 	vertexC.Map(Point.listSymmetry[0o01]),
 ], 0, colorA);
-let faceC = new Polygon([
-	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexB.Map(Point.listSymmetry[0o00]),
-	vertexC.Map(Point.listSymmetry[0o40]),
-	vertexC.Map(Point.listSymmetry[0o42]),
-	vertexB.Map(Point.listSymmetry[0o02]),
-	vertexA.Map(Point.listSymmetry[0o02]),
-], 0, colorB);
 let faceB = new Polygon([
 	vertexB.Map(Point.listSymmetry[0o00]),
 	vertexC.Map(Point.listSymmetry[0o00]),
@@ -53,6 +45,14 @@ let faceB = new Polygon([
 	vertexC.Map(Point.listSymmetry[0o20]),
 	vertexB.Map(Point.listSymmetry[0o40]),
 	vertexC.Map(Point.listSymmetry[0o40]),
+], 0, colorB);
+let faceC = new Polygon([
+	vertexA.Map(Point.listSymmetry[0o00]),
+	vertexB.Map(Point.listSymmetry[0o00]),
+	vertexC.Map(Point.listSymmetry[0o40]),
+	vertexC.Map(Point.listSymmetry[0o42]),
+	vertexB.Map(Point.listSymmetry[0o02]),
+	vertexA.Map(Point.listSymmetry[0o02]),
 ], 0, colorB);
 
 let solidA = new Polyhedron([

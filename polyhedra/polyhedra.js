@@ -261,6 +261,39 @@ Point.At = function (vertexA, vertexB, k) {
 	);
 };
 
+/** @type {(listVertex: VertexData[]) => Point} */
+Point.Dual = function (listVertex) {
+	let sumX = 0;
+	let sumY = 0;
+	let sumZ = 0;
+	let sumXX = 0;
+	let sumYY = 0;
+	let sumZZ = 0;
+	let sumYZ = 0;
+	let sumZX = 0;
+	let sumXY = 0;
+	for (let u of listVertex) {
+		let v = u.GetValue();
+		sumX += v.x;
+		sumY += v.y;
+		sumZ += v.z;
+		sumXX += v.x * v.x;
+		sumYY += v.y * v.y;
+		sumZZ += v.z * v.z;
+		sumYZ += v.y * v.z;
+		sumZX += v.z * v.x;
+		sumXY += v.x * v.y;
+	};
+	let uX = new Point(sumXX, sumXY, sumZX);
+	let uY = new Point(sumXY, sumYY, sumYZ);
+	let uZ = new Point(sumZX, sumYZ, sumZZ);
+	let vX = uY.Cross(uZ);
+	let vY = uZ.Cross(uX);
+	let vZ = uX.Cross(uY);
+	let det = uX.Dot(vX);
+	return (vX.Mul(sumX)).Add(vY.Mul(sumY)).Add(vZ.Mul(sumZ)).Div(det);
+};
+
 // ======================== 3D 多邊形 ========================
 
 let SimplePolygon = class {

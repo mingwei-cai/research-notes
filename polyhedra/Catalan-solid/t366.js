@@ -15,18 +15,32 @@ let colorB = new Color(0x00, 0xCC, 0x99, 0.8);
 let colorC = new Color(0xFF, 0xCC, 0x33, 0.8);
 let colorD = new Color(0xFF, 0x66, 0x99, 0.8);
 
-let vertexA = new Point(1, -1, 1);
-let vertexB = Point.At(
-	new Point(1 / 3, 1 / 3, 1 / 3),
-	new Point(1, 1, 1),
-	2 / 5,
+let vertexA = Point.At(
+	new Point(0, 0, 1),
+	new Point(1, -1, 1),
+	1 / 3,
 );
 
-let faceA = new Polygon([
+let dualA = Point.Dual([
 	vertexA.Map(Point.listSymmetry[0o00]),
+	vertexA.Map(Point.listSymmetry[0o10]),
 	vertexA.Map(Point.listSymmetry[0o20]),
-	vertexB.Map(Point.listSymmetry[0o00]),
+	vertexA.Map(Point.listSymmetry[0o30]),
+	vertexA.Map(Point.listSymmetry[0o40]),
+	vertexA.Map(Point.listSymmetry[0o50]),
+]);
+let dualB = Point.Dual([
+	vertexA.Map(Point.listSymmetry[0o02]),
+	vertexA.Map(Point.listSymmetry[0o21]),
+	vertexA.Map(Point.listSymmetry[0o44]),
+]);
+
+let faceA = new Polygon([
+	dualB.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o01]),
+	dualA.Map(Point.listSymmetry[0o02]),
 ], 0, colorA);
+
 let solidA = new Polyhedron([
 	faceA.Map(Point.listSymmetry[0o00]),
 	faceA.Map(Point.listSymmetry[0o03]),
@@ -46,7 +60,7 @@ let listSolid = [solidA];
 let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
-let r = vertexA.GetValue().GetLength();
+let r = dualA.GetValue().GetLength();
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

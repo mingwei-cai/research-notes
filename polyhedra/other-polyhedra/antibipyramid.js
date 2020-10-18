@@ -69,7 +69,7 @@ let listSolid = [solidA];
 let arcZY = (Math.PI / 2) * (1 - 1 / 8);
 let sinZY = Math.sin(arcZY);
 let cosZY = Math.cos(arcZY);
-let r = zB;
+let r = n < 3 ? listVertexA[0].GetLength() : zB;
 
 let DrawFrame = function () {
 	let timeSec = performance.now() / 1000;

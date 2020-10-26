@@ -31,72 +31,120 @@ let vertexC0 = Point.At(
 	new Point(kA, kA, kA),
 	1 / (kA * 2 + 1),
 );
-let vertexA1 = new Point(1 / (kA + 2), 0, 1);
-let vertexB1 = new Point(1 / (kA + 2), 0, 1);
-let vertexC1 = new Point(kA, kA, kA);
+
+let dualA0 = Point.Dual([
+	vertexA0.Map(Point.listSymmetry[0o00]),
+	vertexB0.Map(Point.listSymmetry[0o00]),
+	vertexC0.Map(Point.listSymmetry[0o00]),
+	vertexC0.Map(Point.listSymmetry[0o20]),
+	vertexB0.Map(Point.listSymmetry[0o20]),
+	vertexB0.Map(Point.listSymmetry[0o21]),
+	vertexC0.Map(Point.listSymmetry[0o21]),
+	vertexC0.Map(Point.listSymmetry[0o01]),
+	vertexB0.Map(Point.listSymmetry[0o01]),
+	vertexA0.Map(Point.listSymmetry[0o01]),
+]);
+let dualB0 = Point.Dual([
+	vertexC0.Map(Point.listSymmetry[0o00]),
+	vertexC0.Map(Point.listSymmetry[0o20]),
+	vertexC0.Map(Point.listSymmetry[0o40]),
+]);
+let dualC0 = Point.Dual([
+	vertexB0.Map(Point.listSymmetry[0o00]),
+	vertexA0.Map(Point.listSymmetry[0o00]),
+	vertexB0.Map(Point.listSymmetry[0o02]),
+]);
+
+let dualA1 = dualA0;
+let dualB1 = dualB0.Mul(dualB0.Dot(dualA0) / dualB0.Dot(dualB0));
+let dualC1 = dualC0.Mul(dualC0.Dot(dualA0) / dualC0.Dot(dualC0));
+
 let p = 0;
-let vertexA = vertexA0.Map((v) => Point.At(v, vertexA1, p));
-let vertexB = vertexB0.Map((v) => Point.At(v, vertexB1, p));
-let vertexC = vertexC0.Map((v) => Point.At(v, vertexC1, p));
+let dualA = dualA0.Map((v) => Point.At(v, dualA1, p));
+let dualB = dualB0.Map((v) => Point.At(v, dualB1, p));
+let dualC = dualC0.Map((v) => Point.At(v, dualC1, p));
+let r0 = dualA0.GetLength();
+let r1 = dualA1.GetLength();
 
 let faceA = new Polygon([
-	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexB.Map(Point.listSymmetry[0o00]),
-	vertexC.Map(Point.listSymmetry[0o00]),
-	vertexC.Map(Point.listSymmetry[0o20]),
-	vertexB.Map(Point.listSymmetry[0o20]),
-	vertexB.Map(Point.listSymmetry[0o21]),
-	vertexC.Map(Point.listSymmetry[0o21]),
-	vertexC.Map(Point.listSymmetry[0o01]),
-	vertexB.Map(Point.listSymmetry[0o01]),
-	vertexA.Map(Point.listSymmetry[0o01]),
-], 0, colorA);
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o03]),
+	dualC.Map(Point.listSymmetry[0o00]),
+], 0);
 let faceB = new Polygon([
-	vertexC.Map(Point.listSymmetry[0o00]),
-	vertexC.Map(Point.listSymmetry[0o20]),
-	vertexC.Map(Point.listSymmetry[0o40]),
-], 0, colorB);
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o40]),
+	dualC.Map(Point.listSymmetry[0o00]),
+], 0);
 let faceC = new Polygon([
-	vertexB.Map(Point.listSymmetry[0o00]),
-	vertexA.Map(Point.listSymmetry[0o00]),
-	vertexB.Map(Point.listSymmetry[0o02]),
-], 0, colorB);
+	dualA.Map(Point.listSymmetry[0o00]),
+	dualA.Map(Point.listSymmetry[0o40]),
+	dualB.Map(Point.listSymmetry[0o00]),
+], 0);
 
 let solidA = new Polyhedron([
-	faceA.Map(Point.listSymmetry[0o00]),
-	faceA.Map(Point.listSymmetry[0o03]),
-	faceA.Map(Point.listSymmetry[0o05]),
-	faceA.Map(Point.listSymmetry[0o06]),
-	faceA.Map(Point.listSymmetry[0o20]),
-	faceA.Map(Point.listSymmetry[0o23]),
-	faceA.Map(Point.listSymmetry[0o25]),
-	faceA.Map(Point.listSymmetry[0o26]),
-	faceA.Map(Point.listSymmetry[0o40]),
-	faceA.Map(Point.listSymmetry[0o43]),
-	faceA.Map(Point.listSymmetry[0o45]),
-	faceA.Map(Point.listSymmetry[0o46]),
+	faceA.Map(Point.listSymmetry[0o00], colorB),
+	faceA.Map(Point.listSymmetry[0o03], colorA),
+	faceA.Map(Point.listSymmetry[0o05], colorD),
+	faceA.Map(Point.listSymmetry[0o06], colorC),
+	faceA.Map(Point.listSymmetry[0o20], colorC),
+	faceA.Map(Point.listSymmetry[0o23], colorD),
+	faceA.Map(Point.listSymmetry[0o25], colorA),
+	faceA.Map(Point.listSymmetry[0o26], colorB),
+	faceA.Map(Point.listSymmetry[0o40], colorD),
+	faceA.Map(Point.listSymmetry[0o43], colorC),
+	faceA.Map(Point.listSymmetry[0o45], colorB),
+	faceA.Map(Point.listSymmetry[0o46], colorA),
 
-	faceC.Map(Point.listSymmetry[0o00]),
-	faceC.Map(Point.listSymmetry[0o03]),
-	faceC.Map(Point.listSymmetry[0o05]),
-	faceC.Map(Point.listSymmetry[0o06]),
-	faceC.Map(Point.listSymmetry[0o20]),
-	faceC.Map(Point.listSymmetry[0o23]),
-	faceC.Map(Point.listSymmetry[0o25]),
-	faceC.Map(Point.listSymmetry[0o26]),
-	faceC.Map(Point.listSymmetry[0o40]),
-	faceC.Map(Point.listSymmetry[0o43]),
-	faceC.Map(Point.listSymmetry[0o45]),
-	faceC.Map(Point.listSymmetry[0o46]),
+	faceB.Map(Point.listSymmetry[0o00], colorB),
+	faceB.Map(Point.listSymmetry[0o01], colorA),
+	faceB.Map(Point.listSymmetry[0o02], colorB),
+	faceB.Map(Point.listSymmetry[0o03], colorA),
+	faceB.Map(Point.listSymmetry[0o04], colorC),
+	faceB.Map(Point.listSymmetry[0o05], colorD),
+	faceB.Map(Point.listSymmetry[0o06], colorC),
+	faceB.Map(Point.listSymmetry[0o07], colorD),
+	faceB.Map(Point.listSymmetry[0o20], colorC),
+	faceB.Map(Point.listSymmetry[0o21], colorC),
+	faceB.Map(Point.listSymmetry[0o22], colorD),
+	faceB.Map(Point.listSymmetry[0o23], colorD),
+	faceB.Map(Point.listSymmetry[0o24], colorA),
+	faceB.Map(Point.listSymmetry[0o25], colorA),
+	faceB.Map(Point.listSymmetry[0o26], colorB),
+	faceB.Map(Point.listSymmetry[0o27], colorB),
+	faceB.Map(Point.listSymmetry[0o40], colorD),
+	faceB.Map(Point.listSymmetry[0o41], colorB),
+	faceB.Map(Point.listSymmetry[0o42], colorA),
+	faceB.Map(Point.listSymmetry[0o43], colorC),
+	faceB.Map(Point.listSymmetry[0o44], colorD),
+	faceB.Map(Point.listSymmetry[0o45], colorB),
+	faceB.Map(Point.listSymmetry[0o46], colorA),
+	faceB.Map(Point.listSymmetry[0o47], colorC),
 
-	faceB.Map(Point.listSymmetry[0o00]),
-	faceB.Map(Point.listSymmetry[0o01]),
-	faceB.Map(Point.listSymmetry[0o02]),
-	faceB.Map(Point.listSymmetry[0o03]),
-	faceB.Map(Point.listSymmetry[0o04]),
-	faceB.Map(Point.listSymmetry[0o05]),
-	faceB.Map(Point.listSymmetry[0o06]),
-	faceB.Map(Point.listSymmetry[0o07]),
+	faceC.Map(Point.listSymmetry[0o00], colorA),
+	faceC.Map(Point.listSymmetry[0o01], colorD),
+	faceC.Map(Point.listSymmetry[0o02], colorC),
+	faceC.Map(Point.listSymmetry[0o03], colorB),
+	faceC.Map(Point.listSymmetry[0o04], colorB),
+	faceC.Map(Point.listSymmetry[0o05], colorC),
+	faceC.Map(Point.listSymmetry[0o06], colorD),
+	faceC.Map(Point.listSymmetry[0o07], colorA),
+	faceC.Map(Point.listSymmetry[0o20], colorA),
+	faceC.Map(Point.listSymmetry[0o21], colorD),
+	faceC.Map(Point.listSymmetry[0o22], colorC),
+	faceC.Map(Point.listSymmetry[0o23], colorB),
+	faceC.Map(Point.listSymmetry[0o24], colorB),
+	faceC.Map(Point.listSymmetry[0o25], colorC),
+	faceC.Map(Point.listSymmetry[0o26], colorD),
+	faceC.Map(Point.listSymmetry[0o27], colorA),
+	faceC.Map(Point.listSymmetry[0o40], colorA),
+	faceC.Map(Point.listSymmetry[0o41], colorD),
+	faceC.Map(Point.listSymmetry[0o42], colorC),
+	faceC.Map(Point.listSymmetry[0o43], colorB),
+	faceC.Map(Point.listSymmetry[0o44], colorB),
+	faceC.Map(Point.listSymmetry[0o45], colorC),
+	faceC.Map(Point.listSymmetry[0o46], colorD),
+	faceC.Map(Point.listSymmetry[0o47], colorA),
 ]);
 
 let listSolid = [solidA];
@@ -126,7 +174,7 @@ let DrawFrame = function () {
 			p = 1 - tr;
 			break;
 	};
-	let r = vertexA.GetValue().GetLength();
+	let r = r0 + (r1 - r0) * p;
 	painter.Draw(listSolid, (v) => (new Point(
 		(v.x * cosXY - v.y * sinXY) / r,
 		((v.y * cosXY + v.x * sinXY) * cosZY + v.z * sinZY) / r,
